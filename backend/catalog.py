@@ -206,8 +206,8 @@ def _extract_readme_preview_and_desc(
             else:
                 screenshots.append(resolved)
 
-    # If README didn't provide both a preview and a logo, inspect the repo's git tree on GitHub
-    if (not gifs and not screenshots) or not logos:
+    # If README didn't provide a logo, inspect the repo's git tree on GitHub ONLY for the logo (never pull unlisted GIFs/screenshots not in README!)
+    if not logos:
         if full_name and "/" in full_name and not full_name.startswith("local/"):
             st, tree_data = _github_get_json(
                 f"https://api.github.com/repos/{full_name}/git/trees/{branch_q}?recursive=1",
@@ -226,16 +226,14 @@ def _extract_readme_preview_and_desc(
                     ):
                         continue
                     fname = low_p.rsplit("/", 1)[-1]
-                    if low_p.endswith(".gif"):
-                        gifs.append(_resolve_repo_asset(rel_path))
-                    elif any(low_p.endswith(ext) for ext in (".png", ".jpg", ".jpeg", ".webp")):
-                        if any(k in fname for k in ("logo", "badge_256", "favicon", "icon")):
+                    if any(low_p.endswith(ext) for ext in (".png", ".jpg", ".jpeg", ".webp")):
+                        if any(k in fname for k in ("radar-favicon", "logo", "badge_256", "favicon", "icon")):
                             logos.append(_resolve_repo_asset(rel_path))
-                        elif any(k in low_p for k in ("showcase", "screenshot", "preview", "banner", "demo", "marcador")):
-                            screenshots.append(_resolve_repo_asset(rel_path))
 
-    preview_url = gifs[0] if gifs else (screenshots[0] if screenshots else (logos[0] if logos else ""))
+    # Pick non-fox specific logo first if multiple logos exist in tree (e.g. radar-favicon.png before fox.png)
+    logos.sort(key=lambda u: (1 if "fox" in u.lower() else 0))
     logo_url = logos[0] if logos else ""
+    preview_url = gifs[0] if gifs else (screenshots[0] if screenshots else logo_url)
 
     desc = ""
     if raw:
@@ -420,18 +418,21 @@ def _inspect_local_folder(root_dir: str, folder_name: str) -> Optional[Dict[str,
             if launch_target:
                 break
 
-    # Fallback to Python entry points
+    # Fallback to Python, Batch, or HTML entry points
     if not launch_target:
         py_candidates = [
-            os.path.join(root_dir, "app.py"),
-            os.path.join(root_dir, "main.py"),
-            os.path.join(nested_same, "app.py"),
-            os.path.join(nested_same, "main.py"),
+            (os.path.join(root_dir, "app.py"), "python"),
+            (os.path.join(root_dir, "main.py"), "python"),
+            (os.path.join(nested_same, "app.py"), "python"),
+            (os.path.join(nested_same, "main.py"), "python"),
+            (os.path.join(root_dir, "Iniciar_Modo_Ventana.bat"), "bat"),
+            (os.path.join(root_dir, "ABRIR_PROGRAMA.html"), "html"),
+            (os.path.join(root_dir, "index.html"), "html"),
         ]
-        for cand in py_candidates:
+        for cand, ltype in py_candidates:
             if os.path.isfile(cand):
                 launch_target = cand
-                launch_type = "python"
+                launch_type = ltype
                 break
 
     has_meta = os.path.isfile(os.path.join(root_dir, "installed_meta.json"))

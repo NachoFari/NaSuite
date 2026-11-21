@@ -189,8 +189,29 @@ class AppRunner:
             }
 
         cwd = os.path.dirname(target)
+        low_target = target.lower()
         try:
-            if launch_type == "exe" or target.lower().endswith(".exe"):
+            if launch_type == "html" or low_target.endswith((".html", ".htm")):
+                if sys.platform == "win32":
+                    os.startfile(target)
+                else:
+                    webbrowser.open(f"file://{os.path.abspath(target)}")
+                self.logs.add("success", app_name, f"Abierto en navegador -> {os.path.basename(target)}")
+                return {
+                    "ok": True,
+                    "pid": 0,
+                    "target": target,
+                    "message": f"{app_name} abierto correctamente.",
+                }
+            elif launch_type == "bat" or low_target.endswith((".bat", ".cmd")):
+                proc = subprocess.Popen(
+                    [target],
+                    cwd=cwd,
+                    shell=True,
+                    stdout=subprocess.DEVNULL,
+                    stderr=subprocess.DEVNULL,
+                )
+            elif launch_type == "exe" or low_target.endswith(".exe"):
                 proc = subprocess.Popen(
                     [target],
                     cwd=cwd,
@@ -524,30 +545,99 @@ class AppRunner:
 
         return False
 
+    def _install_via_github_zip(
+        self,
+        app_record: Dict[str, Any],
+        install_dir: str,
+        task_id: str,
+        token: str = "",
+        overwrite: bool = False,
+    ) -> None:
+        """Download and extract repository source ZIP directly from GitHub (works on any PC without Git)."""
+        repo_name = str(app_record.get("name") or app_record.get("id"))
+        full_name = str(app_record.get("full_name") or "")
+        branch = str(app_record.get("default_branch") or "main")
+        if not full_name or "/" not in full_name:
+            raise RuntimeError("No se encontro el repositorio de GitHub para descargar.")
+
+        zip_url = f"https://github.com/{full_name}/archive/refs/heads/{branch}.zip"
+        dl_dir = os.path.join(tempfile.gettempdir(), "NaSuite_Downloads")
+        os.makedirs(dl_dir, exist_ok=True)
+        zip_path = os.path.join(dl_dir, f"{repo_name}-{branch}.zip")
+        dest_dir = os.path.join(install_dir, repo_name)
+
+        if os.path.isdir(dest_dir) and os.listdir(dest_dir) and not overwrite:
+            shutil.rmtree(dest_dir, onerror=_remove_readonly)
+
+        self._update_task(
+            task_id,
+            progress=15,
+            stage=f"Descargando {repo_name} desde GitHub...",
+            log_line=f"Descargando archivo ZIP: {zip_url}",
+        )
+        self._download_file(zip_url, zip_path, task_id, token=token, progress_start=15, progress_end=72)
+
+        self._update_task(task_id, progress=75, stage="Extrayendo archivos...", log_line=f"Extrayendo en {dest_dir}")
+        os.makedirs(dest_dir, exist_ok=True)
+        with zipfile.ZipFile(zip_path, "r") as zf:
+            members = zf.namelist()
+            top_prefix = ""
+            if members and "/" in members[0]:
+                candidate_prefix = members[0].split("/", 1)[0] + "/"
+                if all(m.startswith(candidate_prefix) for m in members if m.strip()):
+                    top_prefix = candidate_prefix
+            total = max(1, len(members))
+            for idx, member in enumerate(members, start=1):
+                rel_name = member[len(top_prefix):] if (top_prefix and member.startswith(top_prefix)) else member
+                if not rel_name:
+                    continue
+                target_path = os.path.join(dest_dir, rel_name)
+                if member.endswith("/"):
+                    os.makedirs(target_path, exist_ok=True)
+                else:
+                    os.makedirs(os.path.dirname(target_path), exist_ok=True)
+                    with zf.open(member) as src_f, open(target_path, "wb") as dst_f:
+                        shutil.copyfileobj(src_f, dst_f)
+                if idx % 20 == 0 or idx == total:
+                    pct = 75 + int(18 * (idx / total))
+                    self._update_task(task_id, progress=pct, stage=f"Extrayendo ({idx}/{total})...")
+
+        try:
+            os.remove(zip_path)
+        except OSError:
+            pass
+
+        self._write_installed_meta(dest_dir, app_record, "github_zip")
+
     def _install_via_git_clone(
         self,
         app_record: Dict[str, Any],
         install_dir: str,
         task_id: str,
+        token: str = "",
     ) -> None:
         git_exe = shutil.which("git")
         if not git_exe:
-            raise RuntimeError("Git no esta instalado o no se encuentra en PATH.")
+            self._install_via_github_zip(app_record, install_dir, task_id, token=token, overwrite=True)
+            return
 
         repo_name = str(app_record.get("name") or app_record.get("id"))
         clone_url = str(app_record.get("clone_url") or app_record.get("repo_url") or "")
         if not clone_url:
-            raise RuntimeError("No hay URL de repositorio para clonar.")
+            self._install_via_github_zip(app_record, install_dir, task_id, token=token, overwrite=True)
+            return
 
         os.makedirs(install_dir, exist_ok=True)
         dest_dir = os.path.join(install_dir, repo_name)
         if os.path.isdir(dest_dir) and os.listdir(dest_dir):
-            raise RuntimeError(f"La carpeta destino ya existe y no esta vacia: {dest_dir}")
+            shutil.rmtree(dest_dir, onerror=_remove_readonly)
 
         self._update_task(task_id, progress=15, stage=f"Clonando {repo_name}...", log_line=f"git clone {clone_url} -> {dest_dir}")
         rc = self._run_cmd_stream([git_exe, "clone", "--progress", clone_url, dest_dir], install_dir, task_id)
         if rc != 0:
-            raise RuntimeError(f"git clone fallo con codigo {rc}.")
+            self._update_task(task_id, log_line="git clone fallo; usando descarga directa ZIP desde GitHub...", log_level="warn")
+            self._install_via_github_zip(app_record, install_dir, task_id, token=token, overwrite=True)
+            return
 
         self._update_task(task_id, progress=70, stage="Verificando dependencias...")
         req_file = os.path.join(dest_dir, "requirements.txt")
@@ -627,20 +717,18 @@ class AppRunner:
                 local_path = str(app_record.get("local_path") or "")
                 has_git = bool(app_record.get("has_git"))
 
-                if has_git and local_path and os.path.isdir(local_path):
+                if has_git and local_path and os.path.isdir(local_path) and shutil.which("git"):
                     git_exe = shutil.which("git")
-                    if not git_exe:
-                        raise RuntimeError("Git no esta instalado en PATH.")
                     self._update_task(task_id, progress=20, stage="Ejecutando git pull --ff-only...", log_line=f"git -C {local_path} pull --ff-only")
                     rc = self._run_cmd_stream([git_exe, "-C", local_path, "pull", "--ff-only"], local_path, task_id)
                     if rc != 0:
                         raise RuntimeError(f"git pull fallo con codigo {rc}. Revisa cambios locales sin confirmar.")
                     self._update_task(task_id, progress=85, stage="Actualizando metadatos...")
                 else:
-                    self._update_task(task_id, progress=10, stage="Descargando ultima version...", log_line=f"Actualizando {app_name} desde GitHub Releases")
+                    self._update_task(task_id, progress=10, stage="Descargando ultima version...", log_line=f"Actualizando {app_name} desde GitHub")
                     ok = self._install_from_release(app_record, install_dir, "auto", token, task_id)
                     if not ok:
-                        raise RuntimeError("No hay release descargable ni repositorio Git local para actualizar.")
+                        self._install_via_github_zip(app_record, install_dir, task_id, token=token, overwrite=True)
 
                 if on_complete:
                     self._update_task(task_id, progress=95, stage="Verificando instalacion...")
