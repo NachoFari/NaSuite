@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="fox">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NaSuite Launcher — Hub de Aplicaciones</title>
+    <link rel="icon" type="image/png" href="/static/img/nasuite_logo.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/nasuite.css">
+</head>
+<body>
+    <!-- ==================== SPLASH SCREEN ==================== -->
+    <div id="splash-screen" class="splash-screen" role="status" aria-live="polite">
+        <div class="splash-ambient-glow"></div>
+        <div class="splash-content">
+            <div class="splash-logo-stage">
+                <div class="splash-orbital-ring"></div>
+                <div class="splash-orbital-ring splash-orbital-ring-inner"></div>
+                <div class="splash-pulse-aura"></div>
+                <img class="px-icon splash-mascot" src="/static/img/nasuite_logo.png" alt="NaSuite" width="112" height="112">
+            </div>
+            <h1 class="splash-title">
+                <span class="brand-na">Na</span><span class="brand-suite">Suite</span>
+            </h1>
+            <p class="splash-subtitle">HUB DE APLICACIONES &bull; BY NACHOFARI</p>
+            <div class="splash-progress-track">
+                <div id="splash-bar" class="splash-progress-fill" style="width: 12%;"></div>
+            </div>
+            <p id="splash-status" class="splash-status">Inicializando NaSuite Launcher...</p>
+        </div>
+    </div>
+
+    <!-- ==================== APP SHELL ==================== -->
+    <div id="app-shell" class="app-shell">
+        <!-- TOP BAR (58px) -->
+        <header class="topbar">
+            <div class="topbar-brand">
+                <div class="brand-icon-box">
+                    <img class="px-icon" src="/static/img/nasuite_logo.png" alt="NaSuite" width="28" height="28">
+                </div>
+                <div class="brand-text-wrap">
+                    <span class="brand-wordmark">
+                        <span class="brand-na">Na</span><span class="brand-suite">Suite</span>
+                    </span>
+                    <span class="brand-tag">LAUNCHER</span>
+                </div>
+            </div>
+
+            <div class="topbar-search">
+                <img class="px-icon search-icon" src="/static/img/icons/zoom_in.png" alt="" width="16" height="16">
+                <input
+                    type="search"
+                    id="search-input"
+                    class="search-input"
+                    placeholder="Buscar aplicaciones, repositorios o etiquetas..."
+                    autocomplete="off"
+                    spellcheck="false"
+                >
+                <kbd class="search-shortcut">Ctrl+K</kbd>
+            </div>
+
+            <div class="topbar-actions">
+                <button type="button" id="btn-sync" class="btn btn-sync" title="Sincronizar catalogo y buscar actualizaciones">
+                    <img class="px-icon sync-icon" src="/static/img/icons/refresh.png" alt="" width="16" height="16">
+                    <span id="sync-status-text">Sincronizar</span>
+                </button>
+
+                <button type="button" id="btn-add-repo" class="btn btn-secondary" title="Seguir o agregar cualquier repositorio de GitHub">
+                    <img class="px-icon" src="/static/img/icons/upload.png" alt="" width="16" height="16">
+                    <span class="btn-label">Agregar Repo</span>
+                </button>
+
+                <div class="topbar-divider" aria-hidden="true"></div>
+
+                <button type="button" id="btn-notifications" class="btn btn-notifications" title="Novedades y actualizaciones recientes">
+                    <img class="px-icon" src="/static/img/icons/ai.png" width="16" height="16" alt="">
+                    <span class="btn-label">Novedades</span>
+                    <span id="badge-notifications" class="notif-badge hidden">0</span>
+                </button>
+
+                <button type="button" id="btn-toggle-console" class="btn btn-icon-only" title="Mostrar u ocultar consola de salida">
+                    <img class="px-icon" src="/static/img/icons/terminal.png" alt="Consola" width="18" height="18">
+                </button>
+
+                <button type="button" id="btn-theme-quick" class="btn btn-icon-only" title="Cambiar tema rapido">
+                    <img class="px-icon" src="/static/img/icons/palette.png" alt="Tema" width="18" height="18">
+                </button>
+            </div>
+        </header>
+
+        <!-- WORKSPACE BODY (SIDEBAR + MAIN CONTENT) -->
+        <div class="workspace-body">
+            <!-- LEFT SIDEBAR (232px) -->
+            <aside class="sidebar" aria-label="Navegacion principal">
+                <div class="sidebar-section-label">NAVEGACION</div>
+                <nav class="sidebar-nav">
+                    <button type="button" class="nav-item active" data-view="dashboard">
+                        <img class="px-icon nav-icon" src="/static/img/icons/catalog.png" alt="" width="18" height="18">
+                        <span class="nav-label">Todas las Apps</span>
+                        <span id="badge-all" class="nav-badge">0</span>
+                    </button>
+
+                    <button type="button" class="nav-item" data-view="installed">
+                        <img class="px-icon nav-icon" src="/static/img/icons/folder.png" alt="" width="18" height="18">
+                        <span class="nav-label">Instaladas</span>
+                        <span id="badge-installed" class="nav-badge badge-success">0</span>
+                    </button>
+
+                    <button type="button" class="nav-item" data-view="updates">
+                        <img class="px-icon nav-icon" src="/static/img/icons/refresh.png" alt="" width="18" height="18">
+                        <span class="nav-label">Actualizaciones</span>
+                        <span id="badge-updates" class="nav-badge badge-warning">0</span>
+                    </button>
+
+                    <div class="sidebar-divider" aria-hidden="true"></div>
+                    <div class="sidebar-section-label">ECOSISTEMA</div>
+
+                    <button type="button" class="nav-item" data-view="repos">
+                        <img class="px-icon nav-icon" src="/static/img/icons/upload.png" alt="" width="18" height="18">
+                        <span class="nav-label">Repositorios GitHub</span>
+                        <span id="badge-running" class="nav-badge badge-info">0</span>
+                    </button>
+
+                    <button type="button" class="nav-item" data-view="settings">
+                        <img class="px-icon nav-icon" src="/static/img/icons/settings.png" alt="" width="18" height="18">
+                        <span class="nav-label">Configuracion</span>
+                    </button>
+                </nav>
+
+                <!-- SIDEBAR FOOTER STATUS CARD -->
+                <div class="sidebar-footer">
+                    <div class="sidebar-status-card">
+                        <div class="status-card-header">
+                            <span class="live-pulse-dot"></span>
+                            <span class="status-card-title">Estado de la Suite</span>
+                        </div>
+                        <div class="status-card-row">
+                            <span class="status-key">GitHub</span>
+                            <span id="stat-github-user" class="status-val">@NachoFari</span>
+                        </div>
+                        <div class="status-card-row">
+                            <span class="status-key">Ultima sync</span>
+                            <span id="stat-last-sync" class="status-val">Nunca</span>
+                        </div>
+                        <div class="status-card-row">
+                            <span class="status-key">Version</span>
+                            <span id="stat-suite-version" class="status-val status-val-accent">v1.0.0</span>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- MAIN CONTENT AREA -->
+            <main class="main-content">
+                <!-- ==================== VIEW 1: DASHBOARD ==================== -->
+                <section id="view-dashboard" class="view-section active">
+                    <!-- Hero / Status Strip -->
+                    <div class="hero-strip">
+                        <div class="hero-strip-left">
+                            <div class="hero-emblem">
+                                <img class="px-icon" src="/static/img/nasuite_logo.png" alt="NaSuite" width="46" height="46">
+                            </div>
+                            <div class="hero-copy">
+                                <h2 class="hero-title" id="dashboard-heading">
+                                    Centro de Aplicaciones <span class="text-accent">NaSuite</span>
+                                </h2>
+                                <p class="hero-subtitle" id="dashboard-subtitle">
+                                    Explora, descarga e inicia las herramientas de NaSuite y otros proyectos publicos de NachoFari en un clic.
+                                </p>
+                            </div>
+                        </div>
+                        <div class="hero-strip-right">
+                            <div class="hero-pill">
+                                <img class="px-icon" src="/static/img/icons/compile.png" alt="" width="14" height="14">
+                                <span>Lanzamiento directo</span>
+                            </div>
+                            <div class="hero-pill">
+                                <img class="px-icon" src="/static/img/icons/refresh.png" alt="" width="14" height="14">
+                                <span>Sync GitHub</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Filter & Sort Bar -->
+                    <div class="filter-bar">
+                        <div id="category-chips" class="category-chips" role="tablist" aria-label="Filtrar por categoria">
+                            <button type="button" class="chip active" data-category="all">Todas</button>
+                            <button type="button" class="chip" data-category="editor">Editores</button>
+                            <button type="button" class="chip" data-category="calculator">Calculo</button>
+                            <button type="button" class="chip" data-category="dev">Desarrollo</button>
+                            <button type="button" class="chip" data-category="utility">Utilidades</button>
+                        </div>
+
+                        <div class="sort-control">
+                            <label for="sort-select" class="sort-label">Ordenar:</label>
+                            <select id="sort-select" class="select-input">
+                                <option value="name">Nombre (A-Z)</option>
+                                <option value="status">Estado (Instaladas primero)</option>
+                                <option value="updated">Recien actualizadas</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Apps Card Grid -->
+                    <div id="apps-grid" class="apps-grid" aria-live="polite">
+                        <!-- Rendered dynamically by ui.js -->
+                    </div>
+
+                    <!-- Empty State -->
+                    <div id="apps-empty" class="empty-state hidden">
+                        <div class="empty-state-icon">
+                            <img class="px-icon" src="/static/img/icons/hd/catalog_hd_256x256.png" alt="" width="64" height="64">
+                        </div>
+                        <h3 class="empty-state-title">No se encontraron aplicaciones</h3>
+                        <p class="empty-state-desc">
+                            Ajusta tu busqueda, cambia la categoria seleccionada o sincroniza tus repositorios de GitHub para descubrir nuevas apps.
+                        </p>
+                    </div>
+                </section>
+
+                <!-- ==================== VIEW 2: REPOSITORIES ==================== -->
+                <section id="view-repos" class="view-section">
+                    <div class="section-header">
+                        <div class="section-header-text">
+                            <div class="section-title-row">
+                                <img class="px-icon" src="/static/img/icons/upload.png" alt="" width="22" height="22">
+                                <h2 class="section-title">Repositorios de GitHub</h2>
+                            </div>
+                            <p class="section-subtitle">
+                                Gestiona los repositorios descubiertos automaticamente y agrega repositorios personalizados de tu cuenta o de terceros.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Inline Add Custom Repo Bar -->
+                    <div class="inline-repo-bar">
+                        <div class="inline-repo-input-wrap">
+                            <img class="px-icon" src="/static/img/icons/folder.png" alt="" width="16" height="16">
+                            <input
+                                type="text"
+                                id="input-custom-repo"
+                                class="text-input"
+                                placeholder="owner/repo o URL completa (ej. NachoFari/NaTex)"
+                                autocomplete="off"
+                                spellcheck="false"
+                            >
+                        </div>
+                        <button type="button" id="btn-add-custom-repo-inline" class="btn btn-primary">
+                            <img class="px-icon" src="/static/img/icons/upload.png" alt="" width="15" height="15">
+                            <span>Agregar Repositorio</span>
+                        </button>
+                    </div>
+
+                    <!-- Repositories Table -->
+                    <div class="table-card">
+                        <div class="table-scroll">
+                            <table class="repos-table">
+                                <thead>
+                                    <tr>
+                                        <th>Aplicacion / Repo</th>
+                                        <th>Origen</th>
+                                        <th>Version Local</th>
+                                        <th>Version Remota</th>
+                                        <th>Estado</th>
+                                        <th class="col-actions">Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="repos-table-body">
+                                    <!-- Rendered dynamically by ui.js -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ==================== VIEW 3: SETTINGS ==================== -->
+                <section id="view-settings" class="view-section">
+                    <div class="section-header">
+                        <div class="section-header-text">
+                            <div class="section-title-row">
+                                <img class="px-icon" src="/static/img/icons/settings.png" alt="" width="22" height="22">
+                                <h2 class="section-title">Configuracion de NaSuite</h2>
+                            </div>
+                            <p class="section-subtitle">
+                                Configura el descubrimiento de repositorios en GitHub, rutas locales de instalacion y la apariencia visual del launcher.
+                            </p>
+                        </div>
+                        <button type="button" id="btn-save-config" class="btn btn-primary">
+                            <img class="px-icon" src="/static/img/icons/save.png" alt="" width="16" height="16">
+                            <span>Guardar Configuracion</span>
+                        </button>
+                    </div>
+
+                    <div class="settings-grid">
+                        <!-- Card 1: System, Tray & Automation (Full Width) -->
+                        <div class="settings-card settings-card-full">
+                            <div class="settings-card-head">
+                                <img class="px-icon" src="/static/img/icons/settings.png" alt="" width="18" height="18">
+                                <h3>Sistema, Bandeja y Automatizacion</h3>
+                            </div>
+                            <div class="settings-card-body">
+                                <div class="settings-toggles-grid">
+                                    <div class="toggle-row">
+                                        <div class="toggle-text">
+                                            <label for="cfg-start-with-windows" class="form-label">Iniciar NaSuite al encender el computador</label>
+                                            <span class="form-hint">Arranca minimizado en la bandeja del sistema al iniciar Windows</span>
+                                        </div>
+                                        <label class="switch">
+                                            <input type="checkbox" id="cfg-start-with-windows" checked>
+                                            <span class="switch-slider"></span>
+                                        </label>
+                                    </div>
+
+                                    <div class="toggle-row">
+                                        <div class="toggle-text">
+                                            <label for="cfg-minimize-on-launch" class="form-label">Minimizar a la bandeja al abrir una aplicacion</label>
+                                            <span class="form-hint">Esconde el launcher junto al reloj y sonido cuando lanzas una app</span>
+                                        </div>
+                                        <label class="switch">
+                                            <input type="checkbox" id="cfg-minimize-on-launch" checked>
+                                            <span class="switch-slider"></span>
+                                        </label>
+                                    </div>
+
+                                    <div class="toggle-row">
+                                        <div class="toggle-text">
+                                            <label for="cfg-minimize-on-close" class="form-label">Ocultar en la bandeja al cerrar la ventana</label>
+                                            <span class="form-hint">Mantiene la sincronizacion activa en segundo plano; usa Salir desde la bandeja para cerrar</span>
+                                        </div>
+                                        <label class="switch">
+                                            <input type="checkbox" id="cfg-minimize-on-close" checked>
+                                            <span class="switch-slider"></span>
+                                        </label>
+                                    </div>
+
+                                    <div class="toggle-row">
+                                        <div class="toggle-text">
+                                            <label for="cfg-auto-update" class="form-label">Actualizar apps automaticamente</label>
+                                            <span class="form-hint">Busca y descarga nuevas versiones automaticamente en segundo plano</span>
+                                        </div>
+                                        <label class="switch">
+                                            <input type="checkbox" id="cfg-auto-update" checked>
+                                            <span class="switch-slider"></span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Card 2: Local Install Path -->
+                        <div class="settings-card settings-card-full">
+                            <div class="settings-card-head">
+                                <img class="px-icon" src="/static/img/icons/folder.png" alt="" width="18" height="18">
+                                <h3>Carpeta de Aplicaciones</h3>
+                            </div>
+                            <div class="settings-card-body">
+                                <div class="form-group">
+                                    <label for="cfg-install-dir" class="form-label">Ubicacion donde se descargan e instalan las aplicaciones</label>
+                                    <input type="text" id="cfg-install-dir" class="text-input font-mono" placeholder="G:\Mi unidad\NaSuite" autocomplete="off">
+                                    <span class="form-hint">Carpeta donde NaSuite guarda y busca tus programas instalados.</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Card 4: Theme Selector (Full Width) -->
+                        <div class="settings-card settings-card-full">
+                            <div class="settings-card-head">
+                                <img class="px-icon" src="/static/img/icons/palette.png" alt="" width="18" height="18">
+                                <h3>Apariencia y Temas de la Suite</h3>
+                            </div>
+                            <div class="settings-card-body">
+                                <div id="theme-grid" class="theme-grid">
+                                    <button type="button" class="theme-card active" data-theme="fox">
+                                        <img class="px-icon theme-mascot" src="/static/img/icons/mascots/fox.png" alt="Fox" width="36" height="36">
+                                        <span class="theme-name">Fox Orange</span>
+                                        <span class="theme-swatches">
+                                            <span class="swatch" style="background:#0E1015"></span>
+                                            <span class="swatch" style="background:#181a24"></span>
+                                            <span class="swatch" style="background:#FF6B35"></span>
+                                        </span>
+                                    </button>
+                                    <button type="button" class="theme-card" data-theme="panther">
+                                        <img class="px-icon theme-mascot" src="/static/img/icons/mascots/panther.png" alt="Panther" width="36" height="36">
+                                        <span class="theme-name">Panther OLED</span>
+                                        <span class="theme-swatches">
+                                            <span class="swatch" style="background:#000000"></span>
+                                            <span class="swatch" style="background:#111318"></span>
+                                            <span class="swatch" style="background:#94A3B8"></span>
+                                        </span>
+                                    </button>
+                                    <button type="button" class="theme-card" data-theme="cosmos">
+                                        <img class="px-icon theme-mascot" src="/static/img/icons/mascots/cosmos.png" alt="Cosmos" width="36" height="36">
+                                        <span class="theme-name">Cosmos</span>
+                                        <span class="theme-swatches">
+                                            <span class="swatch" style="background:#0b0a18"></span>
+                                            <span class="swatch" style="background:#16142e"></span>
+                                            <span class="swatch" style="background:#8B5CF6"></span>
+                                        </span>
+                                    </button>
+                                    <button type="button" class="theme-card" data-theme="owl">
+                                        <img class="px-icon theme-mascot" src="/static/img/icons/mascots/owl.png" alt="Owl" width="36" height="36">
+                                        <span class="theme-name">Midnight Owl</span>
+                                        <span class="theme-swatches">
+                                            <span class="swatch" style="background:#0c111b"></span>
+                                            <span class="swatch" style="background:#151d2e"></span>
+                                            <span class="swatch" style="background:#F59E0B"></span>
+                                        </span>
+                                    </button>
+                                    <button type="button" class="theme-card" data-theme="coffee">
+                                        <img class="px-icon theme-mascot" src="/static/img/icons/mascots/coffee.png" alt="Coffee" width="36" height="36">
+                                        <span class="theme-name">Espresso</span>
+                                        <span class="theme-swatches">
+                                            <span class="swatch" style="background:#14100d"></span>
+                                            <span class="swatch" style="background:#211a15"></span>
+                                            <span class="swatch" style="background:#D97706"></span>
+                                        </span>
+                                    </button>
+                                    <button type="button" class="theme-card" data-theme="penguin">
+                                        <img class="px-icon theme-mascot" src="/static/img/icons/mascots/penguin.png" alt="Penguin" width="36" height="36">
+                                        <span class="theme-name">Arctic Penguin</span>
+                                        <span class="theme-swatches">
+                                            <span class="swatch" style="background:#0b131e"></span>
+                                            <span class="swatch" style="background:#132030"></span>
+                                            <span class="swatch" style="background:#38BDF8"></span>
+                                        </span>
+                                    </button>
+                                    <button type="button" class="theme-card" data-theme="rabbit">
+                                        <img class="px-icon theme-mascot" src="/static/img/icons/mascots/rabbit.png" alt="Rabbit" width="36" height="36">
+                                        <span class="theme-name">Rabbit Light</span>
+                                        <span class="theme-swatches">
+                                            <span class="swatch" style="background:#f8fafc"></span>
+                                            <span class="swatch" style="background:#ffffff"></span>
+                                            <span class="swatch" style="background:#EC4899"></span>
+                                        </span>
+                                    </button>
+                                    <button type="button" class="theme-card" data-theme="sakura">
+                                        <img class="px-icon theme-mascot" src="/static/img/icons/mascots/sakura.png" alt="Sakura" width="36" height="36">
+                                        <span class="theme-name">Sakura</span>
+                                        <span class="theme-swatches">
+                                            <span class="swatch" style="background:#fdf8f9"></span>
+                                            <span class="swatch" style="background:#fff1f4"></span>
+                                            <span class="swatch" style="background:#F472B6"></span>
+                                        </span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </main>
+        </div>
+
+        <!-- ==================== COLLAPSIBLE BOTTOM CONSOLE DRAWER ==================== -->
+        <aside id="console-drawer" class="console-drawer hidden" aria-label="Consola de salida">
+            <div class="console-header">
+                <div class="console-title-group">
+                    <img class="px-icon" src="/static/img/icons/terminal.png" alt="" width="15" height="15">
+                    <span class="console-title">Consola de Actividad</span>
+                </div>
+                <div class="console-actions">
+                    <button type="button" id="btn-clear-console" class="btn btn-ghost btn-xs" title="Limpiar consola">
+                        <img class="px-icon" src="/static/img/icons/trash.png" alt="" width="13" height="13">
+                        <span>Limpiar</span>
+                    </button>
+                    <button type="button" id="btn-close-console" class="btn btn-ghost btn-xs" title="Cerrar consola">
+                        <span>Cerrar</span>
+                    </button>
+                </div>
+            </div>
+            <div id="console-output" class="console-output" role="log" aria-live="polite"></div>
+        </aside>
+    </div>
+
+    <!-- ==================== MODAL: APP DETAIL ==================== -->
+    <div id="modal-app-detail" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="detail-title">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-header">
+                <div class="modal-title-group">
+                    <img class="px-icon" src="/static/img/icons/catalog.png" alt="" width="18" height="18">
+                    <h3 id="detail-title" class="modal-title">Detalles de la Aplicacion</h3>
+                </div>
+                <button type="button" id="btn-close-detail" class="modal-close-btn" aria-label="Cerrar">&times;</button>
+            </div>
+            <div id="detail-body" class="modal-body">
+                <!-- Populated dynamically by ui.js -->
+            </div>
+            <div id="detail-actions" class="modal-footer">
+                <!-- Populated dynamically by ui.js -->
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== MODAL: ADD REPO ==================== -->
+    <div id="modal-add-repo" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="modal-add-repo-title">
+        <div class="modal-dialog modal-md">
+            <div class="modal-header">
+                <div class="modal-title-group">
+                    <img class="px-icon" src="/static/img/icons/upload.png" alt="" width="18" height="18">
+                    <h3 id="modal-add-repo-title" class="modal-title">Agregar Repositorio de GitHub</h3>
+                </div>
+                <button type="button" id="btn-close-add-repo" class="modal-close-btn" aria-label="Cerrar">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p class="modal-desc">
+                    Ingresa el identificador del repositorio en formato <code>owner/repo</code> o pega la URL completa de GitHub.
+                </p>
+                <div class="form-group">
+                    <label for="modal-repo-input" class="form-label">Repositorio</label>
+                    <input
+                        type="text"
+                        id="modal-repo-input"
+                        class="text-input font-mono"
+                        placeholder="NachoFari/MiNuevaApp"
+                        autocomplete="off"
+                        spellcheck="false"
+                    >
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" onclick="document.getElementById('btn-close-add-repo').click()">Cancelar</button>
+                <button type="button" id="btn-confirm-add-repo" class="btn btn-primary">
+                    <img class="px-icon" src="/static/img/icons/download.png" alt="" width="15" height="15">
+                    <span>Agregar y Sincronizar</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== MODAL: NOTIFICATIONS (WHAT'S NEW) ==================== -->
+    <div id="modal-notifications" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="modal-notifications-title">
+        <div class="modal-dialog modal-lg modal-notifications-dialog">
+            <div class="modal-header">
+                <div class="modal-title-group">
+                    <img class="px-icon" src="/static/img/icons/ai.png" alt="" width="18" height="18">
+                    <h3 id="modal-notifications-title" class="modal-title">Novedades (What's New)</h3>
+                </div>
+                <div class="modal-header-actions">
+                    <button type="button" id="btn-mark-all-read" class="btn btn-secondary btn-xs" title="Marcar todas las novedades como leidas">
+                        <img class="px-icon" src="/static/img/icons/notes.png" alt="" width="13" height="13">
+                        <span>Marcar todo como leido</span>
+                    </button>
+                    <button type="button" id="btn-close-notifications" class="modal-close-btn" aria-label="Cerrar">&times;</button>
+                </div>
+            </div>
+            <div class="notif-filters-bar">
+                <div id="notif-filters" class="notif-filters" role="tablist" aria-label="Filtrar novedades">
+                    <button type="button" class="notif-filter-tab active" data-notif-filter="all" role="tab" aria-selected="true">Todas</button>
+                    <button type="button" class="notif-filter-tab" data-notif-filter="release" role="tab" aria-selected="false">Releases</button>
+                    <button type="button" class="notif-filter-tab" data-notif-filter="commit" role="tab" aria-selected="false">Commits</button>
+                    <button type="button" class="notif-filter-tab" data-notif-filter="new_repo" role="tab" aria-selected="false">Repos nuevos</button>
+                </div>
+            </div>
+            <div class="modal-body notif-modal-body">
+                <div id="notifications-list" class="notifications-list" aria-live="polite"></div>
+                <div id="notifications-empty" class="empty-state notif-empty hidden">
+                    <div class="empty-state-icon">
+                        <img class="px-icon" src="/static/img/icons/notes.png" alt="" width="48" height="48">
+                    </div>
+                    <h4 class="empty-state-title">Sin novedades por ahora</h4>
+                    <p class="empty-state-desc">
+                        Cuando se publiquen nuevos releases, commits o repositorios en GitHub apareceran aqui.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== MODAL: CONFIRM ==================== -->
+    <div id="modal-confirm" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="confirm-title">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-header">
+                <div class="modal-title-group">
+                    <img class="px-icon" src="/static/img/icons/settings.png" alt="" width="18" height="18">
+                    <h3 id="confirm-title" class="modal-title">Confirmar Accion</h3>
+                </div>
+            </div>
+            <div class="modal-body">
+                <p id="confirm-message" class="modal-desc">Esta accion requiere tu confirmacion.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="btn-confirm-cancel" class="btn btn-secondary">Cancelar</button>
+                <button type="button" id="btn-confirm-ok" class="btn btn-danger">Confirmar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== TOAST CONTAINER ==================== -->
+    <div id="toast-container" class="toast-container" aria-live="polite" aria-atomic="true"></div>
+
+    <!-- ==================== SCRIPTS (EXACT ORDER) ==================== -->
+    <script src="/static/js/api.js"></script>
+    <script src="/static/js/ui.js"></script>
+    <script src="/static/js/main.js"></script>
+</body>
+</html>

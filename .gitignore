@@ -1,0 +1,12 @@
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+build/
+dist/
+dist_installer/
+config.json
+cache_repos.json
+notifications.json
+*.tmp
