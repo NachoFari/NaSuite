@@ -377,12 +377,14 @@ def resolve_icon_and_category(
     if low_name == "natex":
         natex_logo_path = os.path.join(resource_root, "static", "img", "icons", "natex_logo.png")
         if os.path.isfile(natex_logo_path):
-            return "natex_logo", "/static/img/icons/natex_logo.png", "/static/img/icons/natex_logo.png", "Escritura", False
+            return "natex_logo", "/static/img/icons/natex_logo.png", "/static/img/icons/natex_logo.png", "Escritura", True
         icon_key, category = "tex", "Escritura"
     elif low_name == "naspire":
         icon_key, category = "calc", "Hardware & Calculo"
     elif low_name == "nasight":
-        icon_key, category = "camera", "Vision & IA"
+        nasight_png = os.path.join(resource_root, "static", "img", "icons", "nasight.png")
+        icon_key = "nasight" if os.path.isfile(nasight_png) else "camera"
+        category = "Vision & IA"
     else:
         blob = f"{low_name} {' '.join(t.lower() for t in (topics or []))} {(description or '').lower()}"
         if any(k in blob for k in ("vision", "ocr", "camera", "image", "saliency", "poster")):
@@ -1018,9 +1020,18 @@ class AppCatalog:
             name, topics, description, self.resource_root
         )
         repo_logo = str((remote or {}).get("repo_logo") or "")
-        if repo_logo and app_id not in ("natex", "naspire"):
-            icon_url = repo_logo
-            icon_small_url = repo_logo
+        remote_commit = str((remote or {}).get("remote_commit") or "")
+        if app_id == "natex" and full_name and "/" in full_name and not full_name.startswith("local/"):
+            branch_q = urllib.parse.quote(str((remote or {}).get("default_branch") or "main"), safe="")
+            cache_q = f"?v={remote_commit}" if remote_commit else ""
+            live_natex_logo = f"https://raw.githubusercontent.com/{full_name}/{branch_q}/static/img/logo_256.png{cache_q}"
+            icon_url = live_natex_logo
+            icon_small_url = live_natex_logo
+            is_pixel_icon = True
+        elif repo_logo and app_id not in ("natex", "naspire"):
+            cache_q = f"?v={remote_commit}" if (remote_commit and repo_logo.startswith("https://")) else ""
+            icon_url = f"{repo_logo}{cache_q}"
+            icon_small_url = f"{repo_logo}{cache_q}"
             is_pixel_icon = "fox" in repo_logo.lower()
 
         local_path = str((local or {}).get("local_path") or "")

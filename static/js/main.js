@@ -1238,6 +1238,12 @@
   function closeNotificationsModal() {
     state.notifModalOpen = false;
     UI.closeModal($('modal-notifications'));
+    if (state.unreadNotifications > 0) {
+      state.notifications = state.notifications.map((n) => (n ? { ...n, read: true } : n));
+      state.unreadNotifications = 0;
+      updateNotificationBadge();
+      API.markAllNotificationsRead().catch(() => {});
+    }
   }
 
   /* --------------------------------------------------------------------------

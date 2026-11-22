@@ -30,13 +30,38 @@ class NotificationManager:
 
     def __init__(self, app_root: str) -> None:
         self.app_root = os.path.abspath(app_root)
-        self.path = os.path.join(self.app_root, "notifications.json")
+        local_app_data = os.environ.get("LOCALAPPDATA", "")
+        if local_app_data:
+            self.path = os.path.join(local_app_data, "NaSuite", "notifications.json")
+        else:
+            self.path = os.path.join(self.app_root, "notifications.json")
+        self._legacy_path = os.path.join(self.app_root, "notifications.json")
         self._lock = threading.RLock()
         self._notifications: Dict[str, Dict[str, Any]] = {}
         self._read_ids: Set[str] = set()
         self._seen_repos: Set[str] = set()
         self._is_fresh_store: bool = not os.path.isfile(self.path)
         self._load()
+        if self._is_fresh_store and os.path.isfile(self._legacy_path) and os.path.abspath(self._legacy_path) != os.path.abspath(self.path):
+            self._migrate_legacy()
+
+    def _migrate_legacy(self) -> None:
+        try:
+            with open(self._legacy_path, "r", encoding="utf-8") as fh:
+                data = json.load(fh)
+            if isinstance(data, dict):
+                for item in data.get("notifications") or []:
+                    if isinstance(item, dict) and item.get("id"):
+                        self._notifications[str(item["id"])] = item
+                for rid in data.get("read_ids") or []:
+                    if rid:
+                        self._read_ids.add(str(rid))
+                for repo in data.get("seen_repos") or []:
+                    if repo:
+                        self._seen_repos.add(str(repo).lower())
+                self._save()
+        except Exception:
+            pass
 
     def _load(self) -> None:
         if not os.path.isfile(self.path):
@@ -289,6 +314,14 @@ class NotificationManager:
             for updated_app in auto_list:
                 if isinstance(updated_app, dict):
                     self._ingest_auto_update_locked(updated_app, newly_created)
+
+            # On very first cold boot, mark historical backlog as already read so only future updates notify
+            if not had_seen_before and newly_created:
+                for item in newly_created:
+                    nid = str(item.get("id") or "")
+                    if nid:
+                        self._read_ids.add(nid)
+                newly_created.clear()
 
             if newly_created or self._is_fresh_store:
                 self._save()

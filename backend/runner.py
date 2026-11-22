@@ -725,8 +725,14 @@ class AppRunner:
 
                 if has_git and local_path and os.path.isdir(local_path) and shutil.which("git"):
                     git_exe = shutil.which("git")
-                    self._update_task(task_id, progress=20, stage="Ejecutando git pull --ff-only...", log_line=f"git -C {local_path} pull --ff-only")
-                    rc = self._run_cmd_stream([git_exe, "-C", local_path, "pull", "--ff-only"], local_path, task_id)
+                    branch = str(app_record.get("default_branch") or "").strip()
+                    pull_cmd = (
+                        [git_exe, "-C", local_path, "pull", "--ff-only", "origin", branch]
+                        if branch
+                        else [git_exe, "-C", local_path, "pull", "--ff-only"]
+                    )
+                    self._update_task(task_id, progress=20, stage="Descargando cambios desde Git...", log_line=" ".join(pull_cmd))
+                    rc = self._run_cmd_stream(pull_cmd, local_path, task_id)
                     if rc != 0:
                         raise RuntimeError(f"git pull fallo con codigo {rc}. Revisa cambios locales sin confirmar.")
                     self._update_task(task_id, progress=85, stage="Actualizando metadatos...")
