@@ -259,7 +259,14 @@
       return true;
     });
 
+    const priorityRank = { natex: 0, naspire: 1, nasight: 2 };
     list = list.slice().sort((a, b) => {
+      // Flagship NaTex is always #1 in Aplicaciones de NaSuite
+      const pa = priorityRank[String(a.id || '').toLowerCase()] ?? 99;
+      const pb = priorityRank[String(b.id || '').toLowerCase()] ?? 99;
+      if (pa === 0 && pb !== 0) return -1;
+      if (pb === 0 && pa !== 0) return 1;
+
       if (state.sortBy === 'name') {
         return String(a.name || '').localeCompare(String(b.name || ''), 'es', {
           sensitivity: 'base',
@@ -273,7 +280,8 @@
           sensitivity: 'base',
         });
       }
-      // Default: 'status' (running -> update_available -> installed -> not_installed, then name)
+      // Default: priority flagship order for NaSuite apps, then status, then name
+      if (pa !== pb) return pa - pb;
       const oa = getStatusMeta(normalizeStatus(a)).order;
       const ob = getStatusMeta(normalizeStatus(b)).order;
       if (oa !== ob) return oa - ob;

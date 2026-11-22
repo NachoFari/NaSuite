@@ -381,6 +381,8 @@ def resolve_icon_and_category(
         icon_key, category = "tex", "Escritura"
     elif low_name == "naspire":
         icon_key, category = "calc", "Hardware & Calculo"
+    elif low_name == "nasight":
+        icon_key, category = "camera", "Vision & IA"
     else:
         blob = f"{low_name} {' '.join(t.lower() for t in (topics or []))} {(description or '').lower()}"
         if any(k in blob for k in ("vision", "ocr", "camera", "image", "saliency", "poster")):
@@ -972,10 +974,18 @@ class AppCatalog:
                 continue
             merged[app_id] = self._build_app_record(None, local, install_dir)
 
-        # Sort: running first, then update_available, then installed, then not_installed; then by name
+        # Sort: Flagship NaTex ALWAYS #1, then NaSpire, NaSight, then by status and name
+        priority_rank = {"natex": 0, "naspire": 1, "nasight": 2}
         order = {"running": 0, "update_available": 1, "installed": 2, "not_installed": 3}
         apps = list(merged.values())
-        apps.sort(key=lambda a: (order.get(a["status"], 9), a["name"].lower()))
+        apps.sort(
+            key=lambda a: (
+                0 if a.get("id") == "natex" else 1,
+                priority_rank.get(a.get("id", ""), 9),
+                order.get(a["status"], 9),
+                a["name"].lower(),
+            )
+        )
         return apps
 
     def get_app_by_id(self, app_id: str) -> Optional[Dict[str, Any]]:
@@ -1019,6 +1029,8 @@ class AppCatalog:
             preview_image = "/static/img/previews/natex_preview.gif"
         elif app_id == "naspire" and os.path.isfile(os.path.join(self.resource_root, "static", "img", "previews", "naspire_preview.png")):
             preview_image = "/static/img/previews/naspire_preview.png"
+        elif app_id == "nasight" and os.path.isfile(os.path.join(self.resource_root, "static", "img", "previews", "nasight_preview.png")):
+            preview_image = "/static/img/previews/nasight_preview.png"
         elif not preview_image and local_path:
             prev_u, prev_logo, prev_d = _extract_readme_preview_and_desc(
                 full_name, str((remote or {}).get("default_branch") or "main"), local_path

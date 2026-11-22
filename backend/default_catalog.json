@@ -1,6 +1,60 @@
 {
-  "synced_at": "2026-11-21T23:58:58+00:00",
+  "synced_at": "2026-11-22T02:09:37+00:00",
   "repos": [
+    {
+      "id": "nasight",
+      "name": "NaSight",
+      "full_name": "NachoFari/NaSight",
+      "description": "NaSight — Predicción de Atención Visual y Mapas de Calor para Pósters Científicos (UMSI, DeepGaze IIE, TranSalNet + Modo Consenso) - 100% Portable",
+      "preview_image": "https://opengraph.githubassets.com/1/NachoFari/NaSight",
+      "repo_logo": "",
+      "is_suite_app": true,
+      "topics": [],
+      "language": "JavaScript",
+      "stars": 0,
+      "repo_url": "https://github.com/NachoFari/NaSight",
+      "clone_url": "https://github.com/NachoFari/NaSight.git",
+      "default_branch": "main",
+      "updated_at": "2026-11-22T02:03:57Z",
+      "is_custom": false,
+      "remote_tag": "",
+      "remote_version": "",
+      "release_notes": "",
+      "release_url": "",
+      "release_published_at": "",
+      "release_assets": {
+        "installer": null,
+        "portable_zip": null,
+        "portable_exe": null
+      },
+      "remote_commit": "5232096",
+      "recent_commits": [
+        {
+          "sha": "5232096",
+          "full_sha": "52320966e82552f9ca5f478347e544cc1881d5d2",
+          "message": "Rebrand project to NaSight (NaSuite)",
+          "date": "2026-11-22T02:03:56Z",
+          "author": "NachoFari",
+          "url": "https://github.com/NachoFari/NaSight/commit/52320966e82552f9ca5f478347e544cc1881d5d2"
+        },
+        {
+          "sha": "7c880f5",
+          "full_sha": "7c880f50b2aa7e982662aacf39b47c177b3cb7f9",
+          "message": "Improve UX: Rename main file to ABRIR_PROGRAMA.html, add native window launcher (.bat), and move app.js into modules/",
+          "date": "2026-11-04T18:21:08Z",
+          "author": "NachoFari",
+          "url": "https://github.com/NachoFari/NaSight/commit/7c880f50b2aa7e982662aacf39b47c177b3cb7f9"
+        },
+        {
+          "sha": "c01d24f",
+          "full_sha": "c01d24fa9c15f8f8943fbfd02ef63eff5e9db411",
+          "message": "Initial release: SaliencyVision IA con 3 modelos SOTA + Modo Consenso (GNU GPLv3)",
+          "date": "2026-11-04T13:59:17Z",
+          "author": "NachoFari",
+          "url": "https://github.com/NachoFari/NaSight/commit/c01d24fa9c15f8f8943fbfd02ef63eff5e9db411"
+        }
+      ]
+    },
     {
       "id": "naspire",
       "name": "NaSpire",
@@ -19,7 +73,7 @@
       "is_custom": false,
       "remote_tag": "v1.0.0",
       "remote_version": "1.0.0",
-      "release_notes": "## NaSpire Studio v1.0.0 (Ecosistema NaSuite)\n\nPrimer lanzamiento oficial de **NaSpire Studio**, el entorno de escritorio portable, visual y nativo para calculadoras **TI-Nspire** en Windows.\n\n### Descargas Disponibles en este Release\n- **`NaSpire-Setup-v1.0.0.exe`** *(Recomendado)*: Instalador completo para Windows 10/11 con accesos directos en Escritorio/Menú Inicio, desinstalador y soporte de actualizaciones automáticas.\n- **`NaSpire-v1.0.0-Windows-Portable.zip`**: Carpeta 100% portable con `NaSpire.exe` y todas sus dependencias integradas (descomprimir y ejecutar sin instalar nada).\n- **`NaSpire.exe`**: Ejecutable principal compilado para Windows x64.\n\n### Funcionalidades Incluidas\n- **Conexión USB Nativa (`NavNet + NNSE`):** Compatible con toda la familia TI-Nspire (`CX II CAS`, `CX II`, `CX II-T`, `CX CAS`, `CX`, `Touchpad` y `Clickpad`), con reinicio automático de sesión NNSE sin desconectar el cable.\n- **Explorador de Archivos Completo:** Subida por Drag & Drop, descarga, renombrado, movimiento entre carpetas, creación de directorios y etiquetas automáticas de aplicaciones internas de cada `.tns`.\n- **Proyector en Vivo y Capturas (`SS`):** Proyección en tiempo real (`1 FPS`, `~4 FPS`, `Máximo USB`), contador de FPS, Pantalla Completa, zoom hasta `2.5x`, historial de sesión, copiar al portapapeles y exportar PNG.\n- **Creador Visual de Documentos `.tns` Nativos:**\n  - *Listas y Hoja de Cálculo* nativa (`urn:tabulator`, método 13) con plantilla **Runge-Kutta 4 (RK4)** incluida.\n  - *Funciones y Notas* nativas (`1.1 Calculadora` + `1.2 Notas`).\n  - *Scripts Python (CX II)* y *Lua* compilados con `luna.exe` integrado.\n- **Editor Visual `.tns` por Pestañas:** Doble clic en cualquier `.tns` del explorador para editar sus pestañas (`Calculadora`, `Hoja de Cálculo`, `Notas`, `Gráficos`) o inspeccionar/editar su XML (`</> Ver XML`).\n- **Catálogo Oficial TI-Nspire CX II CAS + Autocompletado en Vivo.**\n- **Estética Fox Orange (NaSuite) en Pixel Art 32x32 y Auto-Updater integrado.**\n",
+      "release_notes": "## NaSpire Studio v1.0.0 (Ecosistema NaSuite)\n\nPrimer lanzamiento oficial de **NaSpire Studio**, el entorno de escritorio portable, visual y nativo para calculadoras **TI-Nspire** en Windows.\n\n### Descargas Disponibles en este Release\n- **`NaSpire-Setup-v1.0.0.exe`** *(Recomendado)*: Instalador completo para Windows 10/11 con accesos directos en Escritorio/Menú Inicio, desinstalador y soporte de actualizaciones automáticas.\n- **`NaSpire-v1.0.0-Windows-Portable.zip`**: Carpeta 100% portable con `NaSpire.exe` y todas sus dependencias integradas (descomprimir y ejecutar sin instalar nada).\n\n### Funcionalidades Incluidas\n- **Conexión USB Nativa (`NavNet + NNSE`):** Compatible con toda la familia TI-Nspire (`CX II CAS`, `CX II`, `CX II-T`, `CX CAS`, `CX`, `Touchpad` y `Clickpad`), con reinicio automático de sesión NNSE sin desconectar el cable.\n- **Explorador de Archivos Completo:** Subida por Drag & Drop, descarga, renombrado, movimiento entre carpetas, creación de directorios y etiquetas automáticas de aplicaciones internas de cada `.tns`.\n- **Proyector en Vivo y Capturas (`SS`):** Proyección en tiempo real (`1 FPS`, `~4 FPS`, `Máximo USB`), contador de FPS, Pantalla Completa, zoom hasta `2.5x`, historial de sesión, copiar al portapapeles y exportar PNG.\n- **Creador Visual de Documentos `.tns` Nativos:**\n  - *Listas y Hoja de Cálculo* nativa (`urn:tabulator`, método 13) con plantilla **Runge-Kutta 4 (RK4)** incluida.\n  - *Funciones y Notas* nativas (`1.1 Calculadora` + `1.2 Notas`).\n  - *Scripts Python (CX II)* y *Lua* compilados con `luna.exe` integrado.\n- **Editor Visual `.tns` por Pestañas:** Doble clic en cualquier `.tns` del explorador para editar sus pestañas (`Calculadora`, `Hoja de Cálculo`, `Notas`, `Gráficos`) o inspeccionar/editar su XML (`</> Ver XML`).\n- **Catálogo Oficial TI-Nspire CX II CAS + Autocompletado en Vivo.**\n- **Estética Fox Orange (NaSuite) en Pixel Art 32x32 y Auto-Updater integrado.**",
       "release_url": "https://github.com/NachoFari/NaSpire/releases/tag/v1.0.0",
       "release_published_at": "2026-11-21T23:38:43Z",
       "release_assets": {
@@ -33,11 +87,7 @@
           "url": "https://github.com/NachoFari/NaSpire/releases/download/v1.0.0/NaSpire-v1.0.0-Windows-Portable.zip",
           "size": 19805233
         },
-        "portable_exe": {
-          "name": "NaSpire.exe",
-          "url": "https://github.com/NachoFari/NaSpire/releases/download/v1.0.0/NaSpire.exe",
-          "size": 5723864
-        }
+        "portable_exe": null
       },
       "remote_commit": "de7b82d",
       "recent_commits": [
@@ -89,7 +139,7 @@
       "full_name": "NachoFari/NaTex",
       "description": "NaSuite • El entorno de edición LaTeX rápido, visual, libre y colaborativo.",
       "preview_image": "https://raw.githubusercontent.com/NachoFari/NaTex/main/docs/screenshots/gallery_showcase.gif",
-      "repo_logo": "https://raw.githubusercontent.com/NachoFari/NaTex/main/projects/Mi_Primer_Documento/logo_natex.png",
+      "repo_logo": "https://raw.githubusercontent.com/NachoFari/NaTex/main/static/img/logo_128.png",
       "is_suite_app": true,
       "topics": [],
       "language": "JavaScript",
@@ -99,22 +149,38 @@
       "default_branch": "main",
       "updated_at": "2026-11-12T16:32:03Z",
       "is_custom": false,
-      "remote_tag": "v1.3.1",
-      "remote_version": "1.3.1",
-      "release_notes": "",
-      "release_url": "https://github.com/NachoFari/NaTex/releases/tag/v1.3.1",
-      "release_published_at": "2026-11-15T00:32:45Z",
+      "remote_tag": "v1.3.2",
+      "remote_version": "1.3.2",
+      "release_notes": "## 🎉 What's New en NaTex Studio v1.3.2\n\n- **🦊 Ecosistema NaSuite (`NaSuite • LaTeX Environment`):** Nueva pantalla integrada **What's New** con acceso directo al ecosistema **NaSuite**.\n- **⚡ Compilación Tolerante estilo Overleaf:** Soporte `-Z continue-on-errors` en Tectonic y filtrado inteligente de logs y advertencias.\n- **🎨 Interfaz Clásica Restaurada:** Iconografía original limpia y legible en barras, menús y paneles con soporte para los 20 temas y 60 sprites Pixel Art.\n\n---\n\n### 🦊 Recomendado: Instala **NaSuite Launcher**\nGestiona, abre, instala y actualiza automáticamente **NaTex Studio**, **NaSpire Studio** y todas las aplicaciones del ecosistema **NaSuite** desde un único centro de control en tu escritorio:\n\n👉 **[📥 Descargar NaSuite Launcher (.exe) Directo](https://github.com/NachoFari/NaSuite/releases/latest/download/NaSuite-Setup-v1.0.0.exe)** | **[🌐 Ver repositorio de NaSuite](https://github.com/NachoFari/NaSuite/releases/latest)**\n",
+      "release_url": "https://github.com/NachoFari/NaTex/releases/tag/v1.3.2",
+      "release_published_at": "2026-11-22T01:29:16Z",
       "release_assets": {
         "installer": {
-          "name": "NaTex-Setup-v1.3.1.exe",
-          "url": "https://github.com/NachoFari/NaTex/releases/download/v1.3.1/NaTex-Setup-v1.3.1.exe",
-          "size": 39967421
+          "name": "NaTex-Setup-v1.3.2.exe",
+          "url": "https://github.com/NachoFari/NaTex/releases/download/v1.3.2/NaTex-Setup-v1.3.2.exe",
+          "size": 36996781
         },
         "portable_zip": null,
         "portable_exe": null
       },
-      "remote_commit": "73c9471",
+      "remote_commit": "2a8b3ac",
       "recent_commits": [
+        {
+          "sha": "2a8b3ac",
+          "full_sha": "2a8b3ac0126cbdfbe15d0798023fc6f3c99d9f92",
+          "message": "feat(branding): nuevo logo oficial Pixel Art v2 (zorro con cola esponjosa y plumilla dorada) en 32/64/128/256px y natex.ico",
+          "date": "2026-11-22T01:53:27Z",
+          "author": "NachoFari",
+          "url": "https://github.com/NachoFari/NaTex/commit/2a8b3ac0126cbdfbe15d0798023fc6f3c99d9f92"
+        },
+        {
+          "sha": "de4be69",
+          "full_sha": "de4be69104b0e7253e13d8b0d79f5a66fcfe335e",
+          "message": "release: NaTex Studio v1.3.2 con pantalla What's New, recomendacion directa de NaSuite Launcher y emojis restaurados",
+          "date": "2026-11-22T01:26:16Z",
+          "author": "NachoFari",
+          "url": "https://github.com/NachoFari/NaTex/commit/de4be69104b0e7253e13d8b0d79f5a66fcfe335e"
+        },
         {
           "sha": "73c9471",
           "full_sha": "73c947150d3d17070cac762dea3b4bc3acab7c12",
@@ -138,22 +204,6 @@
           "date": "2026-11-21T21:56:58Z",
           "author": "NachoFari",
           "url": "https://github.com/NachoFari/NaTex/commit/f3501d60c7b9bc5d343343ff95763d11190fee2e"
-        },
-        {
-          "sha": "73f875f",
-          "full_sha": "73f875f8de42707fb94161e727b6106c777d251e",
-          "message": "Update README.md",
-          "date": "2026-11-14T23:43:39Z",
-          "author": "NachoFari",
-          "url": "https://github.com/NachoFari/NaTex/commit/73f875f8de42707fb94161e727b6106c777d251e"
-        },
-        {
-          "sha": "06b9732",
-          "full_sha": "06b973252daf0aa277810c760c2da47e68a11e5d",
-          "message": "Merge branch 'main' of https://github.com/NachoFari/NaTex",
-          "date": "2026-11-12T15:31:46Z",
-          "author": "NachoFari",
-          "url": "https://github.com/NachoFari/NaTex/commit/06b973252daf0aa277810c760c2da47e68a11e5d"
         }
       ]
     },
@@ -224,52 +274,6 @@
           "date": "2026-11-09T15:48:58Z",
           "author": "NachoFari",
           "url": "https://github.com/NachoFari/radar-icf/commit/6e7aff238f242d209c19124296335c540d1ffab2"
-        }
-      ]
-    },
-    {
-      "id": "poster-saliency-ia",
-      "name": "Poster-Saliency-IA",
-      "full_name": "NachoFari/Poster-Saliency-IA",
-      "description": "Predicción de Atención Visual y Mapas de Calor para Pósters Científicos (UMSI, DeepGaze IIE, TranSalNet + Modo Consenso) - 100% Portable",
-      "preview_image": "https://opengraph.githubassets.com/1/NachoFari/Poster-Saliency-IA",
-      "repo_logo": "",
-      "is_suite_app": false,
-      "topics": [],
-      "language": "JavaScript",
-      "stars": 0,
-      "repo_url": "https://github.com/NachoFari/Poster-Saliency-IA",
-      "clone_url": "https://github.com/NachoFari/Poster-Saliency-IA.git",
-      "default_branch": "main",
-      "updated_at": "2026-11-04T18:21:16Z",
-      "is_custom": false,
-      "remote_tag": "",
-      "remote_version": "",
-      "release_notes": "",
-      "release_url": "",
-      "release_published_at": "",
-      "release_assets": {
-        "installer": null,
-        "portable_zip": null,
-        "portable_exe": null
-      },
-      "remote_commit": "7c880f5",
-      "recent_commits": [
-        {
-          "sha": "7c880f5",
-          "full_sha": "7c880f50b2aa7e982662aacf39b47c177b3cb7f9",
-          "message": "Improve UX: Rename main file to ABRIR_PROGRAMA.html, add native window launcher (.bat), and move app.js into modules/",
-          "date": "2026-11-04T18:21:08Z",
-          "author": "NachoFari",
-          "url": "https://github.com/NachoFari/Poster-Saliency-IA/commit/7c880f50b2aa7e982662aacf39b47c177b3cb7f9"
-        },
-        {
-          "sha": "c01d24f",
-          "full_sha": "c01d24fa9c15f8f8943fbfd02ef63eff5e9db411",
-          "message": "Initial release: SaliencyVision IA con 3 modelos SOTA + Modo Consenso (GNU GPLv3)",
-          "date": "2026-11-04T13:59:17Z",
-          "author": "NachoFari",
-          "url": "https://github.com/NachoFari/Poster-Saliency-IA/commit/c01d24fa9c15f8f8943fbfd02ef63eff5e9db411"
         }
       ]
     },
