@@ -308,14 +308,20 @@ class AppRunner:
 
     def open_folder(self, app_record: Dict[str, Any]) -> Dict[str, Any]:
         local_path = str(app_record.get("local_path") or "")
-        if not local_path or not os.path.isdir(local_path):
+        launch_target = str(app_record.get("launch_target") or "")
+        target_dir = ""
+        if local_path and os.path.isdir(local_path):
+            target_dir = os.path.abspath(local_path)
+        elif launch_target and os.path.isfile(launch_target):
+            target_dir = os.path.dirname(os.path.abspath(launch_target))
+        if not target_dir or not os.path.isdir(target_dir):
             return {"ok": False, "error": "Carpeta local no encontrada."}
         try:
             if sys.platform == "win32":
-                os.startfile(local_path)
+                os.startfile(target_dir)
             else:
-                subprocess.Popen(["xdg-open", local_path])
-            return {"ok": True, "path": local_path}
+                subprocess.Popen(["xdg-open", target_dir])
+            return {"ok": True, "path": target_dir}
         except Exception as exc:
             return {"ok": False, "error": f"No se pudo abrir la carpeta: {exc}"}
 

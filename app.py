@@ -8,14 +8,17 @@ from __future__ import annotations
 
 import argparse
 import http.server
+import json
 import mimetypes
 import os
 import socket
 import socketserver
 import sys
+import tempfile
 import threading
 import time
 import urllib.parse
+import urllib.request
 import webbrowser
 from typing import Any, Optional
 
@@ -151,9 +154,103 @@ def parse_args(argv: list[str]) -> argparse.Namespace:
     return parser.parse_args(argv)
 
 
+_SINGLE_INSTANCE_MUTEX: Any = None
+
+
+def _get_instance_lock_path() -> str:
+    base = os.environ.get("LOCALAPPDATA") or tempfile.gettempdir()
+    lock_dir = os.path.join(base, "NaSuite")
+    os.makedirs(lock_dir, exist_ok=True)
+    return os.path.join(lock_dir, "launcher_instance.json")
+
+
+def _write_instance_lock(port: int) -> None:
+    try:
+        with open(_get_instance_lock_path(), "w", encoding="utf-8") as fh:
+            json.dump({"pid": os.getpid(), "port": port}, fh)
+    except Exception:
+        pass
+
+
+def _wake_existing_instance(show_window: bool = True) -> bool:
+    """Ask an already-running NaSuite Launcher instance to restore its window."""
+    candidate_ports: list[int] = []
+    lock_path = _get_instance_lock_path()
+    if os.path.isfile(lock_path):
+        try:
+            with open(lock_path, "r", encoding="utf-8") as fh:
+                data = json.load(fh)
+            p = int(data.get("port") or 0)
+            if p > 0:
+                candidate_ports.append(p)
+        except Exception:
+            pass
+    for p in range(5100, 5110):
+        if p not in candidate_ports:
+            candidate_ports.append(p)
+
+    woke = False
+    for port in candidate_ports:
+        try:
+            endpoint = "/api/window/show" if show_window else "/api/health"
+            method = "POST" if show_window else "GET"
+            req = urllib.request.Request(
+                f"http://127.0.0.1:{port}{endpoint}",
+                data=b"{}" if method == "POST" else None,
+                headers={"Content-Type": "application/json"},
+                method=method,
+            )
+            with urllib.request.urlopen(req, timeout=0.6) as resp:
+                raw = resp.read().decode("utf-8", errors="replace")
+                if resp.status == 200 and "NaSuite" in raw:
+                    woke = True
+                    break
+        except Exception:
+            continue
+
+    if show_window and sys.platform == "win32":
+        try:
+            import ctypes
+            user32 = ctypes.windll.user32
+            hwnd = user32.FindWindowW(None, "NaSuite — Hub de Aplicaciones")
+            if hwnd:
+                user32.ShowWindow(hwnd, 9)  # SW_RESTORE
+                user32.SetForegroundWindow(hwnd)
+                woke = True
+        except Exception:
+            pass
+    return woke
+
+
+def _acquire_single_instance_mutex() -> bool:
+    """Return True if this process is the primary single instance, False if another instance holds the mutex."""
+    global _SINGLE_INSTANCE_MUTEX
+    if sys.platform != "win32":
+        return True
+    try:
+        import ctypes
+        kernel32 = ctypes.windll.kernel32
+        mutex = kernel32.CreateMutexW(None, False, "Local\\NachoFari_NaSuite_Launcher_SingleInstance")
+        err = kernel32.GetLastError()
+        _SINGLE_INSTANCE_MUTEX = mutex
+        if err == 183:  # ERROR_ALREADY_EXISTS
+            return False
+        return True
+    except Exception:
+        return True
+
+
 def main(argv: list[str] | None = None) -> int:
     args = parse_args(argv if argv is not None else sys.argv[1:])
+
+    # Garantizar instancia unica: si ya hay un NaSuite activo, despertarlo y salir.
+    if not _acquire_single_instance_mutex() or _wake_existing_instance(show_window=not args.minimized):
+        _wake_existing_instance(show_window=not args.minimized)
+        print(f"[{APP_NAME}] Ya existe una instancia en ejecucion. Ventana activada.")
+        return 0
+
     port = args.port if args.port > 0 else find_available_port(5100, max_attempts=50)
+    _write_instance_lock(port)
 
     router = ApiRouter(APP_DIR, RESOURCE_DIR)
     NaSuiteHandler.router = router
@@ -212,6 +309,16 @@ def main(argv: list[str] | None = None) -> int:
                 win.restore()
             except Exception:
                 pass
+            if sys.platform == "win32":
+                try:
+                    import ctypes
+                    user32 = ctypes.windll.user32
+                    hwnd = user32.FindWindowW(None, "NaSuite — Hub de Aplicaciones")
+                    if hwnd:
+                        user32.ShowWindow(hwnd, 9)
+                        user32.SetForegroundWindow(hwnd)
+                except Exception:
+                    pass
         else:
             webbrowser.open(url)
 
@@ -244,7 +351,7 @@ def main(argv: list[str] | None = None) -> int:
         on_quit=tray_quit,
     )
     tray.start()
-    router.set_window_callbacks(on_hide=hide_window, on_balloon=tray.show_balloon)
+    router.set_window_callbacks(on_hide=hide_window, on_show=restore_window, on_balloon=tray.show_balloon)
 
     try:
         import webview

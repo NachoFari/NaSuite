@@ -53,16 +53,37 @@ def main() -> int:
 
     print(f"=== 1/3 Compilando NaSuite Launcher v{LAUNCHER_VERSION} con PyInstaller ===")
     spec_path = os.path.join(ROOT, "NaSuite.spec")
-    cmd = [pyinstaller, "--noconfirm", spec_path]
+    import tempfile
+    tmp_root = os.path.join(tempfile.gettempdir(), "NaSuite_PyInstaller_Build")
+    tmp_dist = os.path.join(tmp_root, "dist")
+    tmp_work = os.path.join(tmp_root, "build")
+    if os.path.isdir(tmp_dist):
+        shutil.rmtree(tmp_dist, ignore_errors=True)
+    cmd = [pyinstaller, "--noconfirm", "--distpath", tmp_dist, "--workpath", tmp_work, spec_path]
 
     if subprocess.call(cmd) != 0:
         print("[ERROR] Fallo PyInstaller.")
         return 1
 
+    built_dir = os.path.join(tmp_dist, "NaSuite")
     dist_dir = os.path.join(ROOT, "dist", "NaSuite")
-    if not os.path.isdir(dist_dir):
-        print(f"[ERROR] No se genero el directorio esperado: {dist_dir}")
+    if not os.path.isdir(built_dir):
+        print(f"[ERROR] No se genero el directorio esperado: {built_dir}")
         return 1
+
+    if os.path.isdir(dist_dir):
+        shutil.rmtree(dist_dir, ignore_errors=True)
+    os.makedirs(os.path.dirname(dist_dir), exist_ok=True)
+    shutil.copytree(built_dir, dist_dir, dirs_exist_ok=True)
+
+    # Remove any machine-specific runtime state before packaging installer and portable ZIP
+    for runtime_file in ("config.json", "cache_repos.json", "notifications.json"):
+        rf_path = os.path.join(dist_dir, runtime_file)
+        if os.path.isfile(rf_path):
+            try:
+                os.remove(rf_path)
+            except OSError:
+                pass
 
     # Also copy NaSuite.exe note/shortcut convenience
     os.makedirs(os.path.join(ROOT, "dist_installer"), exist_ok=True)

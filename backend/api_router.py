@@ -40,6 +40,7 @@ class ApiRouter:
         app_root: str,
         resource_root: str,
         on_hide_window: Optional[Callable[[], None]] = None,
+        on_show_window: Optional[Callable[[], None]] = None,
         on_notify_balloon: Optional[Callable[[str, str], None]] = None,
     ) -> None:
         self.app_root = app_root
@@ -51,6 +52,7 @@ class ApiRouter:
         self.notifications = NotificationManager(app_root)
 
         self._on_hide_window = on_hide_window
+        self._on_show_window = on_show_window
         self._on_notify_balloon = on_notify_balloon
         self._auto_updating: Set[str] = set()
         self._auto_update_lock = threading.Lock()
@@ -65,10 +67,12 @@ class ApiRouter:
     def set_window_callbacks(
         self,
         on_hide: Optional[Callable[[], None]] = None,
+        on_show: Optional[Callable[[], None]] = None,
         on_balloon: Optional[Callable[[str, str], None]] = None,
     ) -> None:
-        """Register native window hide and tray balloon notification callbacks."""
+        """Register native window hide/show and tray balloon notification callbacks."""
         self._on_hide_window = on_hide
+        self._on_show_window = on_show
         self._on_notify_balloon = on_balloon
 
     def _notify_balloon(self, title: str, message: str) -> None:
@@ -296,6 +300,12 @@ class ApiRouter:
         if path == "/api/window/hide":
             self._schedule_hide_window(delay=0.1)
             return _json_response(200, {"ok": True})
+
+        if path == "/api/window/show":
+            cb = self._on_show_window
+            if cb:
+                threading.Thread(target=cb, daemon=True).start()
+            return _json_response(200, {"ok": True, "app": APP_NAME})
 
         if path == "/api/system/autostart":
             enabled = bool(payload.get("enabled", True))
