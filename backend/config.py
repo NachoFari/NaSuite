@@ -214,10 +214,15 @@ class ConfigManager:
 
     def load_cache(self) -> Dict[str, Any]:
         with self._lock:
-            if not os.path.isfile(self.cache_path):
-                return {"synced_at": "", "repos": []}
+            target = self.cache_path
+            if not os.path.isfile(target):
+                bundled = os.path.join(get_resource_root(), "backend", "default_catalog.json")
+                if os.path.isfile(bundled):
+                    target = bundled
+                else:
+                    return {"synced_at": "", "repos": []}
             try:
-                with open(self.cache_path, "r", encoding="utf-8") as fh:
+                with open(target, "r", encoding="utf-8") as fh:
                     data = json.load(fh)
                 if isinstance(data, dict) and isinstance(data.get("repos"), list):
                     return {

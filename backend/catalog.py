@@ -60,13 +60,49 @@ def _is_version_newer(remote_ver: str, local_ver: str) -> bool:
     return parse_version(remote_ver) > parse_version(local_ver)
 
 
+_CACHED_GIT_TOKEN: Optional[str] = None
+
+
+def _get_effective_token(configured_token: str = "") -> str:
+    global _CACHED_GIT_TOKEN
+    if configured_token:
+        return configured_token
+    if _CACHED_GIT_TOKEN is not None:
+        return _CACHED_GIT_TOKEN
+    git_exe = shutil.which("git")
+    if not git_exe:
+        _CACHED_GIT_TOKEN = ""
+        return ""
+    try:
+        proc = subprocess.run(
+            [git_exe, "credential", "fill"],
+            input="protocol=https\nhost=github.com\n\n",
+            capture_output=True,
+            text=True,
+            encoding="utf-8",
+            errors="replace",
+            timeout=3,
+            creationflags=NO_WINDOW_FLAG,
+        )
+        if proc.returncode == 0:
+            for line in proc.stdout.splitlines():
+                if line.startswith("password="):
+                    _CACHED_GIT_TOKEN = line.split("=", 1)[1].strip()
+                    return _CACHED_GIT_TOKEN
+    except Exception:
+        pass
+    _CACHED_GIT_TOKEN = ""
+    return ""
+
+
 def _github_get_json(url: str, token: str = "", timeout: int = 12) -> Tuple[int, Any]:
+    eff_token = _get_effective_token(token)
     headers = {
         "User-Agent": USER_AGENT,
         "Accept": "application/vnd.github+json",
     }
-    if token:
-        headers["Authorization"] = f"Bearer {token}"
+    if eff_token:
+        headers["Authorization"] = f"Bearer {eff_token}"
 
     req = urllib.request.Request(url, headers=headers)
     try:
@@ -81,6 +117,9 @@ def _github_get_json(url: str, token: str = "", timeout: int = 12) -> Tuple[int,
             raw = resp.read().decode("utf-8", errors="replace")
             return resp.status, json.loads(raw) if raw else {}
     except urllib.error.HTTPError as exc:
+        # If token failed with 401, retry unauthenticated once
+        if exc.code == 401 and eff_token:
+            return _github_get_json(url, token="", timeout=timeout)
         body = ""
         try:
             body = exc.read().decode("utf-8", errors="replace")
@@ -91,6 +130,81 @@ def _github_get_json(url: str, token: str = "", timeout: int = 12) -> Tuple[int,
         except Exception:
             parsed = {"message": str(exc)}
         return exc.code, parsed
+
+
+def _scrape_public_repos_html(github_user: str) -> List[Dict[str, Any]]:
+    """Zero-API-quota fallback: discover public repositories directly from github.com HTML."""
+    url = f"https://github.com/{urllib.parse.quote(github_user)}?tab=repositories"
+    html = _fetch_text_url(url, timeout=10)
+    if not html:
+        return []
+    repos: List[Dict[str, Any]] = []
+    seen: set[str] = set()
+    pattern = re.compile(
+        rf'href="/{re.escape(github_user)}/([A-Za-z0-9_.-]+)"\s+itemprop="name codeRepository"',
+        re.IGNORECASE,
+    )
+    for m in pattern.finditer(html):
+        rname = m.group(1).strip()
+        if not rname or rname.lower() in seen:
+            continue
+        seen.add(rname.lower())
+        full_name = f"{github_user}/{rname}"
+        repos.append(
+            {
+                "name": rname,
+                "full_name": full_name,
+                "description": "",
+                "topics": [],
+                "language": "Python",
+                "stargazers_count": 0,
+                "html_url": f"https://github.com/{full_name}",
+                "clone_url": f"https://github.com/{full_name}.git",
+                "default_branch": "main",
+                "updated_at": _now_iso(),
+                "fork": False,
+            }
+        )
+    return repos
+
+
+def _fetch_commits_atom(full_name: str, default_branch: str = "main") -> List[Dict[str, str]]:
+    """Zero-API-quota fallback: fetch recent commits from GitHub Atom feed."""
+    import xml.etree.ElementTree as ET
+
+    branch_q = urllib.parse.quote(default_branch or "main", safe="")
+    xml_raw = _fetch_text_url(f"https://github.com/{full_name}/commits/{branch_q}.atom", timeout=8)
+    if not xml_raw:
+        return []
+    commits: List[Dict[str, str]] = []
+    try:
+        root = ET.fromstring(xml_raw)
+        ns = {"a": "http://www.w3.org/2005/Atom"}
+        for entry in root.findall("a:entry", ns)[:5]:
+            id_el = entry.find("a:id", ns)
+            title_el = entry.find("a:title", ns)
+            updated_el = entry.find("a:updated", ns)
+            author_el = entry.find("a:author/a:name", ns)
+            link_el = entry.find("a:link", ns)
+            full_sha = ""
+            if id_el is not None and id_el.text and "/" in id_el.text:
+                full_sha = id_el.text.rsplit("/", 1)[-1].strip()
+            short_sha = full_sha[:7]
+            if not short_sha:
+                continue
+            commits.append(
+                {
+                    "sha": short_sha,
+                    "full_sha": full_sha,
+                    "message": (title_el.text or "").strip() if title_el is not None else "",
+                    "date": (updated_el.text or "").strip() if updated_el is not None else "",
+                    "author": (author_el.text or "").strip() if author_el is not None else "",
+                    "url": link_el.attrib.get("href", "") if link_el is not None else "",
+                }
+            )
+    except Exception:
+        pass
+    return commits
 
 
 def _classify_release_assets(assets: List[Dict[str, Any]]) -> Dict[str, Optional[Dict[str, Any]]]:
@@ -593,6 +707,10 @@ class AppCatalog:
                             "url": str(item.get("html_url") or ""),
                         }
                     )
+        else:
+            recent_commits = _fetch_commits_atom(full_name, default_branch)
+            if recent_commits:
+                remote_commit = recent_commits[0]["sha"]
 
         raw_desc = str(repo.get("description") or "").strip()
         preview_image, repo_logo, readme_desc = _extract_readme_preview_and_desc(
@@ -656,6 +774,11 @@ class AppCatalog:
         try:
             user_url = f"https://api.github.com/users/{urllib.parse.quote(github_user)}/repos?per_page=100&sort=updated"
             status, data = _github_get_json(user_url, token=token, timeout=12)
+            if status != 200 or not isinstance(data, list):
+                scraped = _scrape_public_repos_html(github_user)
+                if scraped:
+                    status = 200
+                    data = scraped
             if status == 200 and isinstance(data, list):
                 for repo in data:
                     if not isinstance(repo, dict):

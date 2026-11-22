@@ -1,0 +1,421 @@
+{
+  "synced_at": "2026-11-21T23:58:58+00:00",
+  "repos": [
+    {
+      "id": "naspire",
+      "name": "NaSpire",
+      "full_name": "NachoFari/NaSpire",
+      "description": "El entorno de escritorio portable, visual y nativo para calculadoras TI-Nspire — parte de NaSuite.",
+      "preview_image": "https://raw.githubusercontent.com/NachoFari/NaSpire/main/docs/screenshots/gallery_showcase.gif",
+      "repo_logo": "",
+      "is_suite_app": true,
+      "topics": [],
+      "language": "Python",
+      "stars": 0,
+      "repo_url": "https://github.com/NachoFari/NaSpire",
+      "clone_url": "https://github.com/NachoFari/NaSpire.git",
+      "default_branch": "main",
+      "updated_at": "2026-11-21T23:04:17Z",
+      "is_custom": false,
+      "remote_tag": "v1.0.0",
+      "remote_version": "1.0.0",
+      "release_notes": "## NaSpire Studio v1.0.0 (Ecosistema NaSuite)\n\nPrimer lanzamiento oficial de **NaSpire Studio**, el entorno de escritorio portable, visual y nativo para calculadoras **TI-Nspire** en Windows.\n\n### Descargas Disponibles en este Release\n- **`NaSpire-Setup-v1.0.0.exe`** *(Recomendado)*: Instalador completo para Windows 10/11 con accesos directos en Escritorio/Menú Inicio, desinstalador y soporte de actualizaciones automáticas.\n- **`NaSpire-v1.0.0-Windows-Portable.zip`**: Carpeta 100% portable con `NaSpire.exe` y todas sus dependencias integradas (descomprimir y ejecutar sin instalar nada).\n- **`NaSpire.exe`**: Ejecutable principal compilado para Windows x64.\n\n### Funcionalidades Incluidas\n- **Conexión USB Nativa (`NavNet + NNSE`):** Compatible con toda la familia TI-Nspire (`CX II CAS`, `CX II`, `CX II-T`, `CX CAS`, `CX`, `Touchpad` y `Clickpad`), con reinicio automático de sesión NNSE sin desconectar el cable.\n- **Explorador de Archivos Completo:** Subida por Drag & Drop, descarga, renombrado, movimiento entre carpetas, creación de directorios y etiquetas automáticas de aplicaciones internas de cada `.tns`.\n- **Proyector en Vivo y Capturas (`SS`):** Proyección en tiempo real (`1 FPS`, `~4 FPS`, `Máximo USB`), contador de FPS, Pantalla Completa, zoom hasta `2.5x`, historial de sesión, copiar al portapapeles y exportar PNG.\n- **Creador Visual de Documentos `.tns` Nativos:**\n  - *Listas y Hoja de Cálculo* nativa (`urn:tabulator`, método 13) con plantilla **Runge-Kutta 4 (RK4)** incluida.\n  - *Funciones y Notas* nativas (`1.1 Calculadora` + `1.2 Notas`).\n  - *Scripts Python (CX II)* y *Lua* compilados con `luna.exe` integrado.\n- **Editor Visual `.tns` por Pestañas:** Doble clic en cualquier `.tns` del explorador para editar sus pestañas (`Calculadora`, `Hoja de Cálculo`, `Notas`, `Gráficos`) o inspeccionar/editar su XML (`</> Ver XML`).\n- **Catálogo Oficial TI-Nspire CX II CAS + Autocompletado en Vivo.**\n- **Estética Fox Orange (NaSuite) en Pixel Art 32x32 y Auto-Updater integrado.**\n",
+      "release_url": "https://github.com/NachoFari/NaSpire/releases/tag/v1.0.0",
+      "release_published_at": "2026-11-21T23:38:43Z",
+      "release_assets": {
+        "installer": {
+          "name": "NaSpire-Setup-v1.0.0.exe",
+          "url": "https://github.com/NachoFari/NaSpire/releases/download/v1.0.0/NaSpire-Setup-v1.0.0.exe",
+          "size": 16071357
+        },
+        "portable_zip": {
+          "name": "NaSpire-v1.0.0-Windows-Portable.zip",
+          "url": "https://github.com/NachoFari/NaSpire/releases/download/v1.0.0/NaSpire-v1.0.0-Windows-Portable.zip",
+          "size": 19805233
+        },
+        "portable_exe": {
+          "name": "NaSpire.exe",
+          "url": "https://github.com/NachoFari/NaSpire/releases/download/v1.0.0/NaSpire.exe",
+          "size": 5723864
+        }
+      },
+      "remote_commit": "de7b82d",
+      "recent_commits": [
+        {
+          "sha": "de7b82d",
+          "full_sha": "de7b82d965b95e3af4b7158c0daa7e5f8a4d96aa",
+          "message": "docs: enlaces de descarga directa en un clic al instalador y portable",
+          "date": "2026-11-21T23:41:21Z",
+          "author": "NachoFari",
+          "url": "https://github.com/NachoFari/NaSpire/commit/de7b82d965b95e3af4b7158c0daa7e5f8a4d96aa"
+        },
+        {
+          "sha": "2517f15",
+          "full_sha": "2517f15b96ad22b3c0e67523d15eb47b8b8d2f07",
+          "message": "docs: agregar GIF carrusel grande en Galeria del README estilo NaTex",
+          "date": "2026-11-21T23:26:41Z",
+          "author": "NachoFari",
+          "url": "https://github.com/NachoFari/NaSpire/commit/2517f15b96ad22b3c0e67523d15eb47b8b8d2f07"
+        },
+        {
+          "sha": "db55472",
+          "full_sha": "db55472f9aca42acc9ee0fafbcfb1805deb1e248",
+          "message": "docs: agregar galeria con capturas reales de la app",
+          "date": "2026-11-21T23:12:13Z",
+          "author": "NachoFari",
+          "url": "https://github.com/NachoFari/NaSpire/commit/db55472f9aca42acc9ee0fafbcfb1805deb1e248"
+        },
+        {
+          "sha": "5b47f59",
+          "full_sha": "5b47f59b6a96d6ab8141b8a2d105711825cec275",
+          "message": "docs: README estilo NaTex sin emojis usando iconos pixel art",
+          "date": "2026-11-21T22:20:05Z",
+          "author": "NachoFari",
+          "url": "https://github.com/NachoFari/NaSpire/commit/5b47f59b6a96d6ab8141b8a2d105711825cec275"
+        },
+        {
+          "sha": "1db24a4",
+          "full_sha": "1db24a4c2d64047d0060ae545885f50aabaf0630",
+          "message": "chore: remove .bat launchers in favor of NaSpire.exe, installer and scripts/build.py",
+          "date": "2026-11-21T22:17:08Z",
+          "author": "NachoFari",
+          "url": "https://github.com/NachoFari/NaSpire/commit/1db24a4c2d64047d0060ae545885f50aabaf0630"
+        }
+      ]
+    },
+    {
+      "id": "natex",
+      "name": "NaTex",
+      "full_name": "NachoFari/NaTex",
+      "description": "NaSuite • El entorno de edición LaTeX rápido, visual, libre y colaborativo.",
+      "preview_image": "https://raw.githubusercontent.com/NachoFari/NaTex/main/docs/screenshots/gallery_showcase.gif",
+      "repo_logo": "https://raw.githubusercontent.com/NachoFari/NaTex/main/projects/Mi_Primer_Documento/logo_natex.png",
+      "is_suite_app": true,
+      "topics": [],
+      "language": "JavaScript",
+      "stars": 2,
+      "repo_url": "https://github.com/NachoFari/NaTex",
+      "clone_url": "https://github.com/NachoFari/NaTex.git",
+      "default_branch": "main",
+      "updated_at": "2026-11-12T16:32:03Z",
+      "is_custom": false,
+      "remote_tag": "v1.3.1",
+      "remote_version": "1.3.1",
+      "release_notes": "",
+      "release_url": "https://github.com/NachoFari/NaTex/releases/tag/v1.3.1",
+      "release_published_at": "2026-11-15T00:32:45Z",
+      "release_assets": {
+        "installer": {
+          "name": "NaTex-Setup-v1.3.1.exe",
+          "url": "https://github.com/NachoFari/NaTex/releases/download/v1.3.1/NaTex-Setup-v1.3.1.exe",
+          "size": 39967421
+        },
+        "portable_zip": null,
+        "portable_exe": null
+      },
+      "remote_commit": "73c9471",
+      "recent_commits": [
+        {
+          "sha": "73c9471",
+          "full_sha": "73c947150d3d17070cac762dea3b4bc3acab7c12",
+          "message": "feat(ui): integrar iconos pixel art 32x32 en UI y actualizar badge ecosistema NaSuite en README",
+          "date": "2026-11-21T23:33:57Z",
+          "author": "NachoFari",
+          "url": "https://github.com/NachoFari/NaTex/commit/73c947150d3d17070cac762dea3b4bc3acab7c12"
+        },
+        {
+          "sha": "55f8c96",
+          "full_sha": "55f8c967656d99e3f3439063c870ece6eeb203e2",
+          "message": "Merge branch origin/main and incorporate NaSuite branding",
+          "date": "2026-11-21T21:58:19Z",
+          "author": "NachoFari",
+          "url": "https://github.com/NachoFari/NaTex/commit/55f8c967656d99e3f3439063c870ece6eeb203e2"
+        },
+        {
+          "sha": "f3501d6",
+          "full_sha": "f3501d60c7b9bc5d343343ff95763d11190fee2e",
+          "message": "feat(branding): incorporar identidad NaSuite (NaSuite • LaTeX Environment)",
+          "date": "2026-11-21T21:56:58Z",
+          "author": "NachoFari",
+          "url": "https://github.com/NachoFari/NaTex/commit/f3501d60c7b9bc5d343343ff95763d11190fee2e"
+        },
+        {
+          "sha": "73f875f",
+          "full_sha": "73f875f8de42707fb94161e727b6106c777d251e",
+          "message": "Update README.md",
+          "date": "2026-11-14T23:43:39Z",
+          "author": "NachoFari",
+          "url": "https://github.com/NachoFari/NaTex/commit/73f875f8de42707fb94161e727b6106c777d251e"
+        },
+        {
+          "sha": "06b9732",
+          "full_sha": "06b973252daf0aa277810c760c2da47e68a11e5d",
+          "message": "Merge branch 'main' of https://github.com/NachoFari/NaTex",
+          "date": "2026-11-12T15:31:46Z",
+          "author": "NachoFari",
+          "url": "https://github.com/NachoFari/NaTex/commit/06b973252daf0aa277810c760c2da47e68a11e5d"
+        }
+      ]
+    },
+    {
+      "id": "radar-icf",
+      "name": "radar-icf",
+      "full_name": "NachoFari/radar-icf",
+      "description": "Directorio interactivo de prácticas industriales, prácticas profesionales, becas y pasantías de investigación internacionales y descuentos/perks universitarios,...",
+      "preview_image": "https://raw.githubusercontent.com/NachoFari/radar-icf/main/assets/radar-favicon.png",
+      "repo_logo": "https://raw.githubusercontent.com/NachoFari/radar-icf/main/assets/radar-favicon.png",
+      "is_suite_app": false,
+      "topics": [],
+      "language": "HTML",
+      "stars": 0,
+      "repo_url": "https://github.com/NachoFari/radar-icf",
+      "clone_url": "https://github.com/NachoFari/radar-icf.git",
+      "default_branch": "main",
+      "updated_at": "2026-11-09T18:54:04Z",
+      "is_custom": false,
+      "remote_tag": "",
+      "remote_version": "",
+      "release_notes": "",
+      "release_url": "",
+      "release_published_at": "",
+      "release_assets": {
+        "installer": null,
+        "portable_zip": null,
+        "portable_exe": null
+      },
+      "remote_commit": "9547457",
+      "recent_commits": [
+        {
+          "sha": "9547457",
+          "full_sha": "95474573ad59e541abbe8b00622e21bcdd65c254",
+          "message": "feat(descuentos): add 68 verified Chilean student perks, category filters, and AI disclaimer",
+          "date": "2026-11-09T18:53:56Z",
+          "author": "NachoFari",
+          "url": "https://github.com/NachoFari/radar-icf/commit/95474573ad59e541abbe8b00622e21bcdd65c254"
+        },
+        {
+          "sha": "c252fe8",
+          "full_sha": "c252fe8819d204a5456e8ab212b11f900dcaf119",
+          "message": "feat(descuentos): add Google AI Pro (Gemini Advanced + NotebookLM Plus) and Google Cloud for Students",
+          "date": "2026-11-09T16:20:05Z",
+          "author": "NachoFari",
+          "url": "https://github.com/NachoFari/radar-icf/commit/c252fe8819d204a5456e8ab212b11f900dcaf119"
+        },
+        {
+          "sha": "f64f3d9",
+          "full_sha": "f64f3d9c3cccd5407cc56eeec6869ef072a374b5",
+          "message": "ui: remove Guia de Practicas button and modal until official doc is provided",
+          "date": "2026-11-09T16:12:13Z",
+          "author": "NachoFari",
+          "url": "https://github.com/NachoFari/radar-icf/commit/f64f3d9c3cccd5407cc56eeec6869ef072a374b5"
+        },
+        {
+          "sha": "20a837c",
+          "full_sha": "20a837c5e623497578f8b5185cabf6de48ed1c92",
+          "message": "ci: deploy clean _site artifact to GitHub Pages",
+          "date": "2026-11-09T16:03:15Z",
+          "author": "NachoFari",
+          "url": "https://github.com/NachoFari/radar-icf/commit/20a837c5e623497578f8b5185cabf6de48ed1c92"
+        },
+        {
+          "sha": "6e7aff2",
+          "full_sha": "6e7aff238f242d209c19124296335c540d1ffab2",
+          "message": "feat: complete 25-agent swarm update reaching 200+ verified opportunities",
+          "date": "2026-11-09T15:48:58Z",
+          "author": "NachoFari",
+          "url": "https://github.com/NachoFari/radar-icf/commit/6e7aff238f242d209c19124296335c540d1ffab2"
+        }
+      ]
+    },
+    {
+      "id": "poster-saliency-ia",
+      "name": "Poster-Saliency-IA",
+      "full_name": "NachoFari/Poster-Saliency-IA",
+      "description": "Predicción de Atención Visual y Mapas de Calor para Pósters Científicos (UMSI, DeepGaze IIE, TranSalNet + Modo Consenso) - 100% Portable",
+      "preview_image": "https://opengraph.githubassets.com/1/NachoFari/Poster-Saliency-IA",
+      "repo_logo": "",
+      "is_suite_app": false,
+      "topics": [],
+      "language": "JavaScript",
+      "stars": 0,
+      "repo_url": "https://github.com/NachoFari/Poster-Saliency-IA",
+      "clone_url": "https://github.com/NachoFari/Poster-Saliency-IA.git",
+      "default_branch": "main",
+      "updated_at": "2026-11-04T18:21:16Z",
+      "is_custom": false,
+      "remote_tag": "",
+      "remote_version": "",
+      "release_notes": "",
+      "release_url": "",
+      "release_published_at": "",
+      "release_assets": {
+        "installer": null,
+        "portable_zip": null,
+        "portable_exe": null
+      },
+      "remote_commit": "7c880f5",
+      "recent_commits": [
+        {
+          "sha": "7c880f5",
+          "full_sha": "7c880f50b2aa7e982662aacf39b47c177b3cb7f9",
+          "message": "Improve UX: Rename main file to ABRIR_PROGRAMA.html, add native window launcher (.bat), and move app.js into modules/",
+          "date": "2026-11-04T18:21:08Z",
+          "author": "NachoFari",
+          "url": "https://github.com/NachoFari/Poster-Saliency-IA/commit/7c880f50b2aa7e982662aacf39b47c177b3cb7f9"
+        },
+        {
+          "sha": "c01d24f",
+          "full_sha": "c01d24fa9c15f8f8943fbfd02ef63eff5e9db411",
+          "message": "Initial release: SaliencyVision IA con 3 modelos SOTA + Modo Consenso (GNU GPLv3)",
+          "date": "2026-11-04T13:59:17Z",
+          "author": "NachoFari",
+          "url": "https://github.com/NachoFari/Poster-Saliency-IA/commit/c01d24fa9c15f8f8943fbfd02ef63eff5e9db411"
+        }
+      ]
+    },
+    {
+      "id": "virtuallab_n",
+      "name": "VirtualLab_N",
+      "full_name": "NachoFari/VirtualLab_N",
+      "description": "﻿# 🌌 VirtualLabN: Laboratorio de Física en Realidad Aumentada & Escritorio",
+      "preview_image": "https://opengraph.githubassets.com/1/NachoFari/VirtualLab_N",
+      "repo_logo": "",
+      "is_suite_app": false,
+      "topics": [],
+      "language": "JavaScript",
+      "stars": 0,
+      "repo_url": "https://github.com/NachoFari/VirtualLab_N",
+      "clone_url": "https://github.com/NachoFari/VirtualLab_N.git",
+      "default_branch": "main",
+      "updated_at": "2026-11-04T12:18:16Z",
+      "is_custom": false,
+      "remote_tag": "",
+      "remote_version": "",
+      "release_notes": "",
+      "release_url": "",
+      "release_published_at": "",
+      "release_assets": {
+        "installer": null,
+        "portable_zip": null,
+        "portable_exe": null
+      },
+      "remote_commit": "76363b4",
+      "recent_commits": [
+        {
+          "sha": "76363b4",
+          "full_sha": "76363b49249d830d51dfcdb9ba97a41cceaac8a3",
+          "message": "docs: add GNU GPLv3 license",
+          "date": "2026-11-04T12:18:09Z",
+          "author": "NachoFari",
+          "url": "https://github.com/NachoFari/VirtualLab_N/commit/76363b49249d830d51dfcdb9ba97a41cceaac8a3"
+        },
+        {
+          "sha": "24502ba",
+          "full_sha": "24502ba5e0e0df9dbf7e3681e0293f8104ac065e",
+          "message": "feat(lock-and-physics): lock experiment selection for students in rooms and implement physical Faraday acceleration threshold in Chladni plate",
+          "date": "2026-11-03T03:16:48Z",
+          "author": "NachoFari",
+          "url": "https://github.com/NachoFari/VirtualLab_N/commit/24502ba5e0e0df9dbf7e3681e0293f8104ac065e"
+        },
+        {
+          "sha": "70eac5f",
+          "full_sha": "70eac5f3c4a6fa749f7086dd876a502b32180990",
+          "message": "feat(mobile-ux): custom 3D size slider, sovereign desk/wall mode persistence, fullscreen mode, and mobile touch pinch-zoom",
+          "date": "2026-11-03T03:01:55Z",
+          "author": "NachoFari",
+          "url": "https://github.com/NachoFari/VirtualLab_N/commit/70eac5f3c4a6fa749f7086dd876a502b32180990"
+        },
+        {
+          "sha": "1b7ba15",
+          "full_sha": "1b7ba15f670cce2a284433800743279f42aa164e",
+          "message": "fix(physics): Kirchhoff-Love Chladni plate coordinates, Rayleigh Poisson splitting, and Melde oscillator frequency resonance",
+          "date": "2026-11-03T02:50:02Z",
+          "author": "NachoFari",
+          "url": "https://github.com/NachoFari/VirtualLab_N/commit/1b7ba15f670cce2a284433800743279f42aa164e"
+        },
+        {
+          "sha": "28ec98d",
+          "full_sha": "28ec98dbe436bd81824448671d7cf0ec0eb84f48",
+          "message": "feat(v20): 11 physics labs including Chladni plate OND-02, fullscreen marker, random room codes, and live charts",
+          "date": "2026-11-03T02:35:26Z",
+          "author": "NachoFari",
+          "url": "https://github.com/NachoFari/VirtualLab_N/commit/28ec98dbe436bd81824448671d7cf0ec0eb84f48"
+        }
+      ]
+    },
+    {
+      "id": "labvision",
+      "name": "LabVision",
+      "full_name": "NachoFari/LabVision",
+      "description": "Sistema de visión artificial y OCR en tiempo real para digitalizar pantallas de instrumentos de laboratorio (viscosímetros rotacionales y balanzas) a planillas Excel y CSV.",
+      "preview_image": "https://raw.githubusercontent.com/NachoFari/LabVision/main/static/lab_badge_256.png",
+      "repo_logo": "https://raw.githubusercontent.com/NachoFari/LabVision/main/static/lab_badge_256.png",
+      "is_suite_app": false,
+      "topics": [],
+      "language": "JavaScript",
+      "stars": 0,
+      "repo_url": "https://github.com/NachoFari/LabVision",
+      "clone_url": "https://github.com/NachoFari/LabVision.git",
+      "default_branch": "main",
+      "updated_at": "2026-11-04T12:17:48Z",
+      "is_custom": false,
+      "remote_tag": "v0.8.5",
+      "remote_version": "0.8.5",
+      "release_notes": "# LabVision v0.8.5 - Digitalización Inteligente & Visualización Avanzada 🔬🦊\r\n\r\n¡Nos complace presentar **LabVision v0.8.5**! Esta versión introduce mejoras sustanciales en la visualización analítica en vivo, selección dinámica de cámaras, optimizaciones de diseño para pantallas de laboratorio y un empaquetado optimizado para despliegue sin conexión.\r\n\r\n---\r\n\r\n### 🚀 Novedades y Características Principales\r\n\r\n- **Selector de Cámara en Módulo de Calibración**: Ahora es posible alternar entre cámaras integradas, webcams USB y microscopios ópticos directamente desde la interfaz de calibración, con proyección de imagen real en el visor y análisis de nitidez/deslumbramiento.\r\n- **Explorador Histórico \"Mis Datos\"**: Nueva sección en la pestaña de Base de Datos para consultar, inspeccionar en tabla, abrir en Excel o gestionar mediciones y sesiones anteriores almacenadas en el equipo.\r\n- **Gráficos en Vivo con Selección de Ejes (X / Y)**: Visualización analítica multivariable en tiempo real. Permite correlacionar cualquier variable (Tiempo, Timestamp, N° Muestra) contra viscosidad, torque, RPM, masa o parámetros personalizados con estadísticas automáticas (Último, Mín, Máx, Promedio).\r\n- **Tema Zorro Clásico Refinado (Negro Puro & Naranja Fuego)**: Paleta industrial de alto contraste `#000000` y `#FF6600` optimizada para laboratorios, con reactividad cromática dinámica en el matraz Erlenmeyer para todos los temas del sistema.\r\n- **Interfaz Ergonómica Anti-Desborde**: Optimización de la barra superior y los modales para pantallas portátiles de 1366x768 y 1280x768, evitando cualquier recorte de controles.\r\n\r\n---\r\n\r\n### 🛠️ Mantenimiento y Rendimiento\r\n\r\n- **Repositorio Ultraligero**: Limpieza completa del árbol de código desacoplando binarios pesados para facilitar la clonación y colaboración.\r\n- **Actualizador Integrado**: Sincronización del subsistema `core/updater.py` a la versión `0.8.5` con soporte para verificación no bloqueante.\r\n\r\n---\r\n\r\n### 📦 Archivos de Descarga (Assets)\r\n\r\n| Archivo | Tipo | Descripción |\r\n| :--- | :--- | :--- |\r\n| **`LabVision-Setup-v0.8.5.exe`** | Instalador Windows | Instalador oficial autónomo todo-en-uno con accesos directos y runtime Python 3.12 offline. |\r\n\r\n---\r\n\r\n**Autor**: NachoFari  \r\n**Compatibilidad**: Windows 10 / Windows 11 (64-bit)",
+      "release_url": "https://github.com/NachoFari/LabVision/releases/tag/v0.8.5",
+      "release_published_at": "2026-10-30T05:27:09Z",
+      "release_assets": {
+        "installer": {
+          "name": "LabVision-Setup-v0.8.5.exe",
+          "url": "https://github.com/NachoFari/LabVision/releases/download/v0.8.5/LabVision-Setup-v0.8.5.exe",
+          "size": 295038405
+        },
+        "portable_zip": null,
+        "portable_exe": null
+      },
+      "remote_commit": "47ad106",
+      "recent_commits": [
+        {
+          "sha": "47ad106",
+          "full_sha": "47ad10651952ba3f83dbbf0927b97cb9c64c169e",
+          "message": "docs: add GNU GPLv3 license",
+          "date": "2026-11-04T12:17:42Z",
+          "author": "NachoFari",
+          "url": "https://github.com/NachoFari/LabVision/commit/47ad10651952ba3f83dbbf0927b97cb9c64c169e"
+        },
+        {
+          "sha": "7b0f49c",
+          "full_sha": "7b0f49c5ad3354fa71ff687f59538513c4bbf97f",
+          "message": "chore: repository cleanup, bump version to v0.8.5",
+          "date": "2026-10-30T03:04:16Z",
+          "author": "NachoFari",
+          "url": "https://github.com/NachoFari/LabVision/commit/7b0f49c5ad3354fa71ff687f59538513c4bbf97f"
+        },
+        {
+          "sha": "1e09027",
+          "full_sha": "1e09027b0fa1e88595f37508c5081f4e049cd4a9",
+          "message": "feat: responsive topbar and settings modal fix, live chart axis selectors X/Y, historical Mis Datos browser in database tab, and camera selector in calibration module",
+          "date": "2026-10-29T21:25:31Z",
+          "author": "NachoFari",
+          "url": "https://github.com/NachoFari/LabVision/commit/1e09027b0fa1e88595f37508c5081f4e049cd4a9"
+        },
+        {
+          "sha": "f0e67f3",
+          "full_sha": "f0e67f3fffc20e65138171a0b75475a39b1beb08",
+          "message": "fix(ux): responsive topbar, custom lab dialog popups, dedicated themes modal with LabVision Clasico & cpu throttling",
+          "date": "2026-10-29T20:47:51Z",
+          "author": "NachoFari",
+          "url": "https://github.com/NachoFari/LabVision/commit/f0e67f3fffc20e65138171a0b75475a39b1beb08"
+        },
+        {
+          "sha": "8aa0fd8",
+          "full_sha": "8aa0fd8374ea4dbae0c59e9289395dd85f1786cd",
+          "message": "chore: add templates directory to Inno Setup script",
+          "date": "2026-10-29T20:02:27Z",
+          "author": "NachoFari",
+          "url": "https://github.com/NachoFari/LabVision/commit/8aa0fd8374ea4dbae0c59e9289395dd85f1786cd"
+        }
+      ]
+    }
+  ]
+}
