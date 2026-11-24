@@ -38,16 +38,32 @@ from backend.api_router import ApiRouter
 from backend.tray import SystemTray
 
 
-def find_available_port(start_port: int = 5100, max_attempts: int = 50) -> int:
+DEFAULT_START_PORT = 47310
+
+
+def find_available_port(start_port: int = DEFAULT_START_PORT, max_attempts: int = 100) -> int:
     for port in range(start_port, start_port + max_attempts):
+        # First check if anything is already accepting connections on this port
+        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as probe:
+            probe.settimeout(0.15)
+            if probe.connect_ex(("127.0.0.1", port)) == 0:
+                continue
+        # Verify exclusive bind without SO_REUSEADDR (critical on Windows)
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
-            sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+            if hasattr(socket, "SO_EXCLUSIVEADDRUSE"):
+                try:
+                    sock.setsockopt(socket.SOL_SOCKET, socket.SO_EXCLUSIVEADDRUSE, 1)
+                except OSError:
+                    pass
             try:
                 sock.bind(("127.0.0.1", port))
                 return port
             except OSError:
                 continue
-    return start_port
+    # Ultimate OS-assigned free port fallback
+    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
+        sock.bind(("127.0.0.1", 0))
+        return int(sock.getsockname()[1])
 
 
 class NaSuiteHandler(http.server.BaseHTTPRequestHandler):
@@ -185,7 +201,7 @@ def _wake_existing_instance(show_window: bool = True) -> bool:
                 candidate_ports.append(p)
         except Exception:
             pass
-    for p in range(5100, 5110):
+    for p in range(DEFAULT_START_PORT, DEFAULT_START_PORT + 10):
         if p not in candidate_ports:
             candidate_ports.append(p)
 
@@ -249,7 +265,7 @@ def main(argv: list[str] | None = None) -> int:
         print(f"[{APP_NAME}] Ya existe una instancia en ejecucion. Ventana activada.")
         return 0
 
-    port = args.port if args.port > 0 else find_available_port(5100, max_attempts=50)
+    port = args.port if args.port > 0 else find_available_port(DEFAULT_START_PORT, max_attempts=100)
     _write_instance_lock(port)
 
     router = ApiRouter(APP_DIR, RESOURCE_DIR)
